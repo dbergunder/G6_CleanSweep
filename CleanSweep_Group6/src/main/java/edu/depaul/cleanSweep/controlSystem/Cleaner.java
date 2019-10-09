@@ -5,8 +5,9 @@ import edu.depaul.cleanSweep.cell.SideType;
 
 public class Cleaner {
 
-	private static final int MAX_BATTERY_POWER = 100;
-	private static final int MAX_DIRT_CAPACITY = 50;
+	private static final int MAX_BATTERY_POWER = 250;
+	private static final int MAX_DIRT_CAPACITY = 50; 
+	//a random number I chose. cannot find a specific number in the instruction
 
 	private int currBattery;
 	private int currDirtCapacity;
