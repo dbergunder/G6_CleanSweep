@@ -14,6 +14,8 @@ import java.util.List;
 
 class CleanerTest {
 
+	private static final int MAX_DIRT_CAPACITY = 50;
+
 	@Test
 	void test() {
 		//fail("Not yet implemented");
@@ -25,17 +27,17 @@ class CleanerTest {
 
 		Cell cell1 = new Cell(10, SurfaceType.LOWPILE);
 
-		assertTrue(cell1.surface == SurfaceType.LOWPILE);
-		assertTrue(cleaner.getCurrentBagSize() == 0);
+		assertEquals(10, cell1.dirtAmount);
+		assertEquals(0, cleaner.getCurrentBagSize());
 
 		cleaner.cleanSurface(cell1);
 
-		assertTrue(cell1.surface == SurfaceType.BARE);
-		assertTrue(cleaner.getCurrentBagSize() == 10);
+		assertEquals(0, cell1.dirtAmount);
+		assertEquals(10, cleaner.getCurrentBagSize());
 	}
 
 	@Test
-	void CleanerTest_MaxCapacity(){
+	void CleanerTest_PerfectlyMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
 		List<Cell> board = new LinkedList<>(Arrays.asList(
@@ -47,24 +49,51 @@ class CleanerTest {
 		for (Cell cell : board) {
 				cleaner.cleanSurface(cell);
 		}
-
 		for (Cell cell : board) {
-			assertTrue(cell.dirtAmount == 0);
-			assertTrue(cell.surface == SurfaceType.BARE);
+			assertEquals(0, cell.dirtAmount);
 		}
 
-		assertTrue(cleaner.getCurrentBagSize() == 50);
+		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
 		Cell uncleanedCell = new Cell(12, SurfaceType.LOWPILE);
 
 		cleaner.cleanSurface(uncleanedCell);
 
 		// Assert bag has not grown
-		assertTrue(cleaner.getCurrentBagSize() == 50);
+		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
 		// Assert the cell was NOT cleaned
-		assertTrue(uncleanedCell.dirtAmount == 12);
-		assertTrue(uncleanedCell.surface == SurfaceType.LOWPILE);
-		
+		assertEquals(12, uncleanedCell.dirtAmount);
+	}
+
+	@Test
+	void CleanerTest_TakesPartofDirt(){
+		Cleaner cleaner = new Cleaner();
+
+		List<Cell> board = new LinkedList<>(Arrays.asList(
+				new Cell(5, SurfaceType.LOWPILE),
+				new Cell(30, SurfaceType.HIGHPILE),
+				new Cell(10, SurfaceType.HIGHPILE)
+		));
+
+		for (Cell cell : board) {
+			cleaner.cleanSurface(cell);
+		}
+		for (Cell cell : board) {
+			assertEquals(0, cell.dirtAmount);
+		}
+
+		// At this point in time, the bag can hold 5 more dirt
+		assertEquals(45, cleaner.getCurrentBagSize());
+
+		Cell uncleanedCell = new Cell(12, SurfaceType.LOWPILE);
+
+		cleaner.cleanSurface(uncleanedCell);
+
+		// Assert bag picked up the 5 dirt
+		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
+
+		// Assert the cell was partially cleaned (5 less)
+		assertEquals(7, uncleanedCell.dirtAmount);
 	}
 }
