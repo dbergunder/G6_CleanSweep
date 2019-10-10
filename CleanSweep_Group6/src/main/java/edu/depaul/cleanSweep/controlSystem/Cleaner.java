@@ -24,7 +24,6 @@ public class Cleaner {
 	
 	private static final int MAX_DIRT_CAPACITY = 50;
 
-
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(Cell currentCell){
 
@@ -51,6 +50,10 @@ public class Cleaner {
 		}
 	}
 
+	public Integer getCurrentBagSize(){
+		return vacuumBag.stream().mapToInt(record -> {
+			return record.getValue0();
+		}).sum();
 	public void changeHeading(char h) {
 		headingTowards = h;
 	}

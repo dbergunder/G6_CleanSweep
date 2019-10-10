@@ -17,11 +17,6 @@ class CleanerTest {
 	private static final int MAX_DIRT_CAPACITY = 50;
 
 	@Test
-	void test() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
 	void CleanerTest_DoesNotMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
@@ -93,7 +88,7 @@ class CleanerTest {
 		// Assert bag picked up the 5 dirt
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
-		// Assert the cell was partially cleaned (5 less)
+		// Assert the cell was partially cleaned (5 dirt less)
 		assertEquals(7, uncleanedCell.dirtAmount);
 	}
 }
