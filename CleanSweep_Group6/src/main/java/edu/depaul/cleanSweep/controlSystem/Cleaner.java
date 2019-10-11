@@ -6,23 +6,24 @@ import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
 import org.javatuples.Pair;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Cleaner {
 
 	private static final int MAX_BATTERY_POWER = 250;
-	private static final int MAX_DIRT_CAPACITY = 50; 
-	//a random number I chose. cannot find a specific number in the instruction
+	private static final int MAX_DIRT_CAPACITY = 50;
+	// A random number I chose. cannot find a specific number in the instruction
 
 	private int currBattery;
 	private int currDirtCapacity;
 	private CellNode currCell;
 	private char headingTowards = 'N';
+
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
 	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
-
-	
-	private static final int MAX_DIRT_CAPACITY = 50;
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(Cell currentCell){
@@ -34,19 +35,30 @@ public class Cleaner {
 
 		// Cell is not clean, clean it, update bag, and change cell state
 
+		Integer spaceLeft = MAX_DIRT_CAPACITY - getCurrentBagSize();
 		// Check for space
-		if(currentCell.dirtAmount + getCurrentBagSize() > MAX_DIRT_CAPACITY){
+		if(spaceLeft <= 0){
 			// Can't hold any more. Do not clean cell
 			return;
 		}
 		else{
 			// Add to vaccumbag
-			vacuumBag.add(
-					new Pair<Integer, SurfaceType>(currentCell.dirtAmount, currentCell.surface));
+			Integer dirtToAdd;
+			if(currentCell.dirtAmount > spaceLeft){
+				// Add only some of the dirt
+				dirtToAdd = spaceLeft;
+				currentCell.dirtAmount -= dirtToAdd;
+				// todo - determine what constitutes a low pile vs a high pile
+				currentCell.surface = SurfaceType.LOWPILE;
+			}
+			else{
+				dirtToAdd = currentCell.dirtAmount;
+				currentCell.dirtAmount = 0;
+				currentCell.surface = SurfaceType.BARE;
+			}
 
-			// Clean dirt
-			currentCell.dirtAmount = 0;
-			currentCell.surface = SurfaceType.BARE;
+			vacuumBag.add(
+					new Pair<Integer, SurfaceType>(dirtToAdd, currentCell.surface));
 		}
 	}
 
@@ -54,10 +66,9 @@ public class Cleaner {
 		return vacuumBag.stream().mapToInt(record -> {
 			return record.getValue0();
 		}).sum();
-	public void changeHeading(char h) {
-		headingTowards = h;
 	}
 
-
-
+	public void changeHeading(char h){
+		headingTowards = h;
+	}
 }
