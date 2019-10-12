@@ -12,6 +12,4 @@ public enum SideType {
 	public int getAbbr() {
 		return abbr;
 	}
-	
-	
 }
