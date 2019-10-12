@@ -29,15 +29,10 @@ public class Cleaner {
 
 	}
 
-
 	public Cleaner(int battery, int dirtCapacity, CellNode node) {
 		currBattery = battery;
 		currDirtCapacity = dirtCapacity;
 		currCell = node;
-	}
-
-	public int getAbbr() {
-		return abbr;
 	}
 
 	/*
