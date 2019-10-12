@@ -25,6 +25,124 @@ public class Cleaner {
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
 
+	public Cleaner(){
+
+	}
+
+
+	public Cleaner(int battery, int dirtCapacity, CellNode node) {
+		currBattery = battery;
+		currDirtCapacity = dirtCapacity;
+		currCell = node;
+	}
+
+	public int getAbbr() {
+		return abbr;
+	}
+
+	/*
+	 * According to the current heading direction, first check if the corresponding side is blocked,
+	 * and then move to the next cell.
+	 */
+	public void moveAhead() {
+		switch(this.headingTowards) {
+			case 'N':
+				if(this.currCell.getSideN()== SideType.FLOORCELL || this.currCell.getSideN() == SideType.OPENDOOR) {
+					this.currCell = currCell.getCellN();
+				}
+				break;
+			case 'S':
+				if(this.currCell.getSideS()== SideType.FLOORCELL || this.currCell.getSideS() == SideType.OPENDOOR) {
+					this.currCell = currCell.getCellS();
+				}
+				break;
+			case 'W':
+				if(this.currCell.getSideW()== SideType.FLOORCELL || this.currCell.getSideW() == SideType.OPENDOOR) {
+					this.currCell = currCell.getCellW();
+				}
+				break;
+			case 'E':
+				if(this.currCell.getSideE()== SideType.FLOORCELL || this.currCell.getSideE() == SideType.OPENDOOR) {
+					this.currCell = currCell.getCellE();
+				}
+				break;
+		}
+		printCoordinate();
+		//change current battery level
+	}
+	/*
+	 * For moving left, right or back, the heading direction will change correspondingly, and then move forward.
+	 */
+	public void moveLeft() {
+		switch(this.headingTowards) {
+			case 'N':
+				this.headingTowards = 'W';
+				this.moveAhead();
+				break;
+			case 'S':
+				this.headingTowards = 'E';
+				this.moveAhead();
+				break;
+			case 'W':
+				this.headingTowards = 'S';
+				this.moveAhead();
+				break;
+			case 'E':
+				this.headingTowards = 'N';
+				this.moveAhead();
+				break;
+		}
+		printCoordinate();
+		//change current battery level
+	}
+
+	public void moveRight() {
+		switch(this.headingTowards) {
+			case 'N':
+				this.headingTowards = 'E';
+				this.moveAhead();
+				break;
+			case 'S':
+				this.headingTowards = 'W';
+				this.moveAhead();
+				break;
+			case 'W':
+				this.headingTowards = 'N';
+				this.moveAhead();
+				break;
+			case 'E':
+				this.headingTowards = 'S';
+				this.moveAhead();
+				break;
+		}
+		printCoordinate();
+		//change current battery level
+	}
+
+	public void moveBack() {
+		switch(this.headingTowards) {
+			case 'N':
+				this.headingTowards = 'S';
+				this.moveAhead();
+				break;
+			case 'S':
+				this.headingTowards = 'N';
+				this.moveAhead();
+				break;
+			case 'W':
+				this.headingTowards = 'E';
+				this.moveAhead();
+				break;
+			case 'E':
+				this.headingTowards = 'W';
+				this.moveAhead();
+				break;
+		}
+		printCoordinate();
+		//change current battery level
+	}
+
+
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(Cell currentCell){
 
@@ -66,6 +184,10 @@ public class Cleaner {
 		return vacuumBag.stream().mapToInt(record -> {
 			return record.getValue0();
 		}).sum();
+	}
+
+	private String printCoordinate() {
+		return "My coordinate is " + this.currCell.getCoordinateX() +", "+ this.currCell.getCoordinateY();
 	}
 
 	public void changeHeading(char h){
