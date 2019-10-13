@@ -17,7 +17,7 @@ class CleanerTest {
 	private static final int MAX_DIRT_CAPACITY = 50;
 
 	@Test
-	void CleanerTest_DoesNotMaxCapacity(){
+	void DirtIntake_DoesNotMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
 		Cell cell1 = new Cell(10, SurfaceType.LOWPILE);
@@ -32,7 +32,7 @@ class CleanerTest {
 	}
 
 	@Test
-	void CleanerTest_PerfectlyMaxCapacity(){
+	void DirtIntake_PerfectlyMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
 		List<Cell> board = new LinkedList<>(Arrays.asList(
@@ -62,7 +62,7 @@ class CleanerTest {
 	}
 
 	@Test
-	void CleanerTest_TakesPartofDirt(){
+	void DirtIntake_TakesPartofDirt(){
 		Cleaner cleaner = new Cleaner();
 
 		List<Cell> board = new LinkedList<>(Arrays.asList(
@@ -92,8 +92,9 @@ class CleanerTest {
 		assertEquals(7, uncleanedCell.dirtAmount);
 	}
 
+	// todo - remove unit test once/if ui is written
 	@Test
-	void CleanerTest_CapacityNotifications(){
+	void CapacityNotifications_NotifiesWhenFull(){
 		// redirect stdout
 		PrintStream savedStdout = System.out;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
