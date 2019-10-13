@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 
 class CleanerTest {
 
@@ -90,5 +90,21 @@ class CleanerTest {
 
 		// Assert the cell was partially cleaned (5 dirt less)
 		assertEquals(7, uncleanedCell.dirtAmount);
+	}
+
+	@Test
+	void CleanerTest_CapacityNotifications(){
+		// redirect stdout
+		PrintStream savedStdout = System.out;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(out));
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.cleanSurface(new Cell(35, SurfaceType.HIGHPILE));
+
+		assertEquals("The Clean Sweep's current bag size is: 35\n", out.toString());
+
+		// return jvm to initial state
+		System.setOut(savedStdout);
 	}
 }
