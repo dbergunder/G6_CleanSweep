@@ -74,7 +74,7 @@ class CleanerTest {
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 		assertEquals("The Clean Sweep's current bag size is: 35\n", newOut.toString());
-		
+
 		// return jvm to initial state
 		System.setOut(savedStdout);
 	}
