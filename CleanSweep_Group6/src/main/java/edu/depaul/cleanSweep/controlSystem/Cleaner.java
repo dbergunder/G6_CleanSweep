@@ -142,15 +142,14 @@ public class Cleaner {
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(Cell currentCell){
-		SurfaceType surfaceCleaned = currentCell.surface;
+		SurfaceType surfaceCleaned = currentCell.getSurface();
 
 		// Cell is currently clean. No need to do anything
-		if(currentCell.surface == SurfaceType.BARE){
+		if(currentCell.getDirtAmount() <= 0){
 			return;
 		}
 
 		// Cell is not clean, clean it, update bag, and change cell state
-
 		Integer spaceLeft = MAX_DIRT_CAPACITY - getCurrentBagSize();
 		// Check for space
 		if(spaceLeft <= 0 || atCapacity){
@@ -159,22 +158,9 @@ public class Cleaner {
 		}
 		else{
 			// Add to vaccumbag
-			Integer dirtToAdd;
-			if(currentCell.dirtAmount > spaceLeft){
-				// Add only some of the dirt
-				dirtToAdd = spaceLeft;
-				currentCell.dirtAmount -= dirtToAdd;
-				// todo - determine what constitutes a low pile vs a high pile
-				currentCell.surface = SurfaceType.LOWPILE;
-			}
-			else{
-				dirtToAdd = currentCell.dirtAmount;
-				currentCell.dirtAmount = 0;
-				currentCell.surface = SurfaceType.BARE;
-			}
-
+			currentCell.decreaseDirt();
 			vacuumBag.add(
-					new Pair<Integer, SurfaceType>(dirtToAdd, currentCell.surface));
+					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
 			checkBagSize();
 		}
 	}
