@@ -68,9 +68,28 @@ public class CustomLinkedList {
 				// connect the new node south of the tmpNodeHolder
 				this.tmpNodeHolder.south = new_node;
 				new_node.north = this.tmpNodeHolder;
+				
+				// update tail
+				this.tail = new_node;
 			}
 		} 
 	} 
+	
+	public Node getHead() {
+		return this.head;
+	}
+	
+	public Node getTail() {
+		return this.tail;
+	}
+	
+	public Node getCurrRowHead() {
+		return this.currRowHead;
+	}
+	
+	public Node getTmpNodeHolder() {
+		return this.tmpNodeHolder;
+	}
 
 	// Method to print the LinkedList. 
 	public void printList() { 
@@ -90,6 +109,7 @@ public class CustomLinkedList {
 				currNode = currNode.east; 
 			}
 			
+			System.out.print("\n");
 			counter++; // increment counter after row is finished printing
 			currRowHead = currRowHead.south; // advance to the next row
 			currNode = currRowHead; // reset the current node to the head of the next row
