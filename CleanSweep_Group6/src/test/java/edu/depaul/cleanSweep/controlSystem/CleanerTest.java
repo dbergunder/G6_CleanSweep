@@ -67,13 +67,20 @@ class CleanerTest {
 
 		Cleaner cleaner = new Cleaner();
 
-		for(int i: IntStream.range(1, 36).boxed().collect(Collectors.toList())){
+		for(int i: IntStream.range(1, 50).boxed().collect(Collectors.toList())){
+
 			Cell cell = new Cell(10, SurfaceType.BARE);
 			cleaner.cleanSurface(cell);
 			assertEquals(9, cell.getDirtAmount());
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
-		assertEquals("The Clean Sweep's current bag size is: 35\n", newOut.toString());
+
+		// Remove previous prints
+		newOut.reset();
+
+		cleaner.cleanSurface(new Cell(10, SurfaceType.BARE));
+
+		assertEquals("The Clean Sweep is out of space for dirt!\n", newOut.toString());
 
 		// return jvm to initial state
 		System.setOut(savedStdout);
