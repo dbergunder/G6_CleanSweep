@@ -19,6 +19,7 @@ public class Cleaner {
 	private int currDirtCapacity;
 	private boolean atCapacity;
 	private boolean almostAtCapacity;
+	private String currStatus = new String("No status yet");
 
 	private CellNode currCell;
 	private char headingTowards = 'N';
@@ -167,15 +168,15 @@ public class Cleaner {
 	}
 
 	private void checkBagSize(){
+		String returnStr = new String("The Clean Sweep is out of space for dirt!");
 		assert(getCurrentBagSize() <= MAX_DIRT_CAPACITY);
 		atCapacity = (getCurrentBagSize() == MAX_DIRT_CAPACITY);
 		almostAtCapacity = (getCurrentBagSize() >= 35);
-		// todo - replace println statements with ui calls
 		if(atCapacity){
-			System.out.println("The Clean Sweep is out of space for dirt!");
+			currStatus = returnStr;
 		}
 		else if(almostAtCapacity){
-			System.out.println("The Clean Sweep's current bag size is: " + getCurrentBagSize());
+			currStatus = "The Clean Sweep's current bag size is: " + getCurrentBagSize();
 		}
 	}
 
@@ -184,7 +185,10 @@ public class Cleaner {
 	}
 
 	public boolean isAlmostAtCapacity() { return almostAtCapacity; }
-
+	
+	public String getCleanerStatus () {
+		return currStatus;
+	}
 	public Integer getCurrentBagSize(){
 		return vacuumBag.stream().mapToInt(record -> {
 			return record.getValue0();

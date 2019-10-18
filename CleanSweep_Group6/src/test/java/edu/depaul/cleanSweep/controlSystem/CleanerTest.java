@@ -62,8 +62,6 @@ class CleanerTest {
 	void CapacityNotifications_NotifiesWhenFull(){
 		// redirect stdout
 		PrintStream savedStdout = System.out;
-		ByteArrayOutputStream newOut = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(newOut));
 
 		Cleaner cleaner = new Cleaner();
 
@@ -75,14 +73,9 @@ class CleanerTest {
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 
-		// Remove previous prints
-		newOut.reset();
-
 		cleaner.cleanSurface(new Cell(10, SurfaceType.BARE));
-
-		assertEquals("The Clean Sweep is out of space for dirt!\n", newOut.toString());
-
-		// return jvm to initial state
-		System.setOut(savedStdout);
+        String string1 = new String("The Clean Sweep is out of space for dirt!");
+        String string2 = cleaner.getCleanerStatus();
+		assertEquals(string1, string2);
 	}
 }
