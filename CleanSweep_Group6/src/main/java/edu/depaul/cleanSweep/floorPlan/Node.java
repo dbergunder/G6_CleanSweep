@@ -19,7 +19,7 @@ public class Node implements Serializable {
 //	int surfaceType;
 //	boolean dirt;
 //	boolean visited;
-//	boolean accessable;
+	boolean accessable;
 //	boolean chargingStation;
 
 	// Constructor 
@@ -35,9 +35,18 @@ public class Node implements Serializable {
 //		surfaceType = 1;
 //		dirt = false;
 //		visited = false;
-//		accessable = false;
+		accessable = false;
 //		chargingStation = false;
-	} 
+	}
+	
+	public void setAccessable(boolean f) {
+		accessable = f;
+	}
+	
+	public boolean getAccessable() {
+		return accessable;
+	}
+	
 }
 
 //public class Employee implements Serializable {
