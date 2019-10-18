@@ -4,6 +4,8 @@ import edu.depaul.cleanSweep.cell.CellNode;
 import edu.depaul.cleanSweep.cell.SideType;
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
+import edu.depaul.cleanSweep.floorPlan.Node;
+
 import org.javatuples.Pair;
 
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public class Cleaner {
 	private boolean atCapacity;
 	private boolean almostAtCapacity;
 
-	private CellNode currCell;
+	private Node currNode;
 	private char headingTowards = 'N';
 
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
@@ -32,12 +34,22 @@ public class Cleaner {
 
 	}
 
-	public Cleaner(int battery, int dirtCapacity, CellNode node) {
+	public Cleaner(int battery, int dirtCapacity, Node node) {
 		currBattery = battery;
 		currDirtCapacity = dirtCapacity;
-		currCell = node;
+		currNode = node;
+	}
+	
+	public void setCurrNode(Node n) {
+		currNode = n;
 	}
 
+	
+	public Node getCurrNode() {
+		return currNode;
+	}
+	
+	
 	/*
 	 * According to the current heading direction, first check if the corresponding side is blocked,
 	 * and then move to the next cell.
@@ -45,23 +57,23 @@ public class Cleaner {
 	public void moveAhead() {
 		switch(this.headingTowards) {
 			case 'N':
-				if(this.currCell.getSideN()== SideType.FLOORCELL || this.currCell.getSideN() == SideType.OPENDOOR) {
-					this.currCell = currCell.getCellN();
+				if(this.currNode.north.getAccessable()) {
+					this.currNode = currNode.north;
 				}
 				break;
 			case 'S':
-				if(this.currCell.getSideS()== SideType.FLOORCELL || this.currCell.getSideS() == SideType.OPENDOOR) {
-					this.currCell = currCell.getCellS();
+				if(this.currNode.south.getAccessable()) {
+					this.currNode = currNode.south;
 				}
 				break;
 			case 'W':
-				if(this.currCell.getSideW()== SideType.FLOORCELL || this.currCell.getSideW() == SideType.OPENDOOR) {
-					this.currCell = currCell.getCellW();
+				if(this.currNode.west.getAccessable()) {
+					this.currNode = currNode.west;
 				}
 				break;
 			case 'E':
-				if(this.currCell.getSideE()== SideType.FLOORCELL || this.currCell.getSideE() == SideType.OPENDOOR) {
-					this.currCell = currCell.getCellE();
+				if(this.currNode.east.getAccessable()) {
+					this.currNode = currNode.east;
 				}
 				break;
 		}
@@ -191,8 +203,8 @@ public class Cleaner {
 		}).sum();
 	}
 
-	private String printCoordinate() {
-		return "My coordinate is " + this.currCell.getCoordinateX() +", "+ this.currCell.getCoordinateY();
+	public String printCoordinate() {
+		return "My coordinate is " + this.currNode._x +", "+ this.currNode._y;
 	}
 
 	public void changeHeading(char h){

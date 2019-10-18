@@ -60,7 +60,8 @@ public class FloorPlanTest {
 		assertEquals(0, test.getCurrRowHead()._x);
 		assertEquals(0, test.getTmpNodeHolder()._y);
 		assertEquals(2, test.getTmpNodeHolder()._x);
-		
+	//	assertEquals(1, test.getHead().east._x);
+	//	assertEquals(0, test.getHead().east._y);
 		// test.printList(); this tests that the list prints out (more to come)
 	}
 }
