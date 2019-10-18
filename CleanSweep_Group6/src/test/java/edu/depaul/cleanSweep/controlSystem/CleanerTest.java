@@ -4,48 +4,44 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class CleanerTest {
 
 	private static final int MAX_DIRT_CAPACITY = 50;
 
 	@Test
-	void CleanerTest_DoesNotMaxCapacity(){
+	void DirtIntake_DoesNotMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
 		Cell cell1 = new Cell(10, SurfaceType.LOWPILE);
 
-		assertEquals(10, cell1.dirtAmount);
+		assertEquals(10, cell1.getDirtAmount());
 		assertEquals(0, cleaner.getCurrentBagSize());
 
 		cleaner.cleanSurface(cell1);
 
-		assertEquals(0, cell1.dirtAmount);
-		assertEquals(10, cleaner.getCurrentBagSize());
+		assertEquals(9, cell1.getDirtAmount());
+		assertEquals(1, cleaner.getCurrentBagSize());
 	}
 
 	@Test
-	void CleanerTest_PerfectlyMaxCapacity(){
+	void DirtIntake_PerfectlyMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
-		List<Cell> board = new LinkedList<>(Arrays.asList(
-				new Cell(5, SurfaceType.LOWPILE),
-				new Cell(30, SurfaceType.HIGHPILE),
-				new Cell(15, SurfaceType.HIGHPILE)
-		));
-
-		for (Cell cell : board) {
-				cleaner.cleanSurface(cell);
-		}
-		for (Cell cell : board) {
-			assertEquals(0, cell.dirtAmount);
+		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
+			Cell cell = new Cell(10, SurfaceType.BARE);
+			cleaner.cleanSurface(cell);
+			assertEquals(9, cell.getDirtAmount());
+			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
@@ -58,37 +54,35 @@ class CleanerTest {
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
 		// Assert the cell was NOT cleaned
-		assertEquals(12, uncleanedCell.dirtAmount);
+		assertEquals(12, uncleanedCell.getDirtAmount());
 	}
 
+	// todo - remove unit test once/if ui is written
 	@Test
-	void CleanerTest_TakesPartofDirt(){
+	void CapacityNotifications_NotifiesWhenFull(){
+		// redirect stdout
+		PrintStream savedStdout = System.out;
+		ByteArrayOutputStream newOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(newOut));
+
 		Cleaner cleaner = new Cleaner();
 
-		List<Cell> board = new LinkedList<>(Arrays.asList(
-				new Cell(5, SurfaceType.LOWPILE),
-				new Cell(30, SurfaceType.HIGHPILE),
-				new Cell(10, SurfaceType.HIGHPILE)
-		));
+		for(int i: IntStream.range(1, 50).boxed().collect(Collectors.toList())){
 
-		for (Cell cell : board) {
+			Cell cell = new Cell(10, SurfaceType.BARE);
 			cleaner.cleanSurface(cell);
+			assertEquals(9, cell.getDirtAmount());
+			assertEquals(i, cleaner.getCurrentBagSize());
 		}
-		for (Cell cell : board) {
-			assertEquals(0, cell.dirtAmount);
-		}
 
-		// At this point in time, the bag can hold 5 more dirt
-		assertEquals(45, cleaner.getCurrentBagSize());
+		// Remove previous prints
+		newOut.reset();
 
-		Cell uncleanedCell = new Cell(12, SurfaceType.LOWPILE);
+		cleaner.cleanSurface(new Cell(10, SurfaceType.BARE));
 
-		cleaner.cleanSurface(uncleanedCell);
+		assertEquals("The Clean Sweep is out of space for dirt!\n", newOut.toString());
 
-		// Assert bag picked up the 5 dirt
-		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
-
-		// Assert the cell was partially cleaned (5 dirt less)
-		assertEquals(7, uncleanedCell.dirtAmount);
+		// return jvm to initial state
+		System.setOut(savedStdout);
 	}
 }

@@ -7,12 +7,23 @@ public class Cell {
 	public SideType sideW;
 	public SideType sideE;
 	
-	public SurfaceType surface;
-	public int dirtAmount;
+	private SurfaceType surface;
+	private int dirtAmount;
 
 	public Cell(Integer dirtAmount, SurfaceType surfaceType){
 		this.dirtAmount = dirtAmount;
 		this.surface = surfaceType;
 	}
 
+	public int getDirtAmount() {
+		return dirtAmount;
+	}
+
+	public SurfaceType getSurface() {
+		return surface;
+	}
+
+	public void decreaseDirt(){
+		this.dirtAmount--;
+	}
 }
