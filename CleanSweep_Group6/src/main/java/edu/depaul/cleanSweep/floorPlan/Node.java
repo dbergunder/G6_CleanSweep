@@ -10,12 +10,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Node implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	Node north; 
-	Node south; 
-	Node east; 
-	Node west;
-	int _x;
-	int _y;
+	public Node north; 
+	public Node south; 
+	public Node east; 
+	public Node west;
+	public int _x;
+	public int _y;
 //	int surfaceType;
 //	boolean dirt;
 //	boolean visited;
@@ -24,7 +24,7 @@ public class Node implements Serializable {
 
 	// Constructor 
 	// will make floorplan a java object from xml, which will allow for these nodes to be inserted
-	Node(int x, int y) 
+	Node(int y, int x) 
 	{ 
 		north = null;
 		south = null; 
