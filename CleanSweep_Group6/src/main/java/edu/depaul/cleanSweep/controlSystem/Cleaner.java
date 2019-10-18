@@ -168,12 +168,11 @@ public class Cleaner {
 	}
 
 	private void checkBagSize(){
-		String returnStr = new String("The Clean Sweep is out of space for dirt!");
 		assert(getCurrentBagSize() <= MAX_DIRT_CAPACITY);
 		atCapacity = (getCurrentBagSize() == MAX_DIRT_CAPACITY);
 		almostAtCapacity = (getCurrentBagSize() >= 35);
 		if(atCapacity){
-			currStatus = returnStr;
+			currStatus = "The Clean Sweep is out of space for dirt!";
 		}
 		else if(almostAtCapacity){
 			currStatus = "The Clean Sweep's current bag size is: " + getCurrentBagSize();
