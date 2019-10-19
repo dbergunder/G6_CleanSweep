@@ -55,30 +55,35 @@ public class Cleaner {
 	 * According to the current heading direction, first check if the corresponding side is blocked,
 	 * and then move to the next cell.
 	 */
-	public void moveAhead() {
+	public boolean moveAhead() {
 		switch(this.headingTowards) {
 			case 'N':
-				if(this.currNode.north.getAccessable()) {
+				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.currNode = currNode.north;
+					return true;
 				}
 				break;
 			case 'S':
-				if(this.currNode.south.getAccessable()) {
+				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.currNode = currNode.south;
+					return true;
 				}
 				break;
 			case 'W':
-				if(this.currNode.west.getAccessable()) {
+				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
+					return true;
 				}
 				break;
 			case 'E':
-				if(this.currNode.east.getAccessable()) {
+				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
+					return true;
 				}
 				break;
 		}
 		printCoordinate();
+		return false;
 		//change current battery level
 	}
 	/*

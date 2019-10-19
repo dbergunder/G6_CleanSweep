@@ -104,7 +104,7 @@ public class CustomLinkedList {
 			while (currNode != null) { 
 				// Print the coordinates at current node 
 				System.out.print("(" + currNode._y + ", " + currNode._x + "); "); 
-
+				System.out.print("accessibility : " + currNode.getAccessable());
 				// Go to next node
 				currNode = currNode.east; 
 			}
@@ -114,5 +114,26 @@ public class CustomLinkedList {
 			currRowHead = currRowHead.south; // advance to the next row
 			currNode = currRowHead; // reset the current node to the head of the next row
 		} 
-	} 
+	}
+	
+	public Node returnNode(int x, int y)
+	{
+		Node currRowHead = this.head; // used to increment the row south for printing
+		Node currNode = this.head; // used to increment the node east for printing
+		
+		while (currRowHead != null ) { // start on the first row then print what the current row is 
+			// start at the head of the row and increment east while printing
+			while (currNode != null) { 
+				if(currNode._y == y && currNode._x == x)
+				{
+					return currNode;
+				}
+				// Go to next node
+				currNode = currNode.east; 
+			}
+			currRowHead = currRowHead.south; // advance to the next row
+			currNode = currRowHead; // reset the current node to the head of the next row
+		}
+		return null;
+	}
 }
