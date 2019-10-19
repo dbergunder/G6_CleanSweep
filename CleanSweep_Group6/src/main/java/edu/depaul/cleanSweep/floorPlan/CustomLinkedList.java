@@ -118,11 +118,10 @@ public class CustomLinkedList {
 	
 	public Node returnNode(int x, int y)
 	{
-		Node currRowHead = this.head; // used to increment the row south for printing
-		Node currNode = this.head; // used to increment the node east for printing
+		Node currRowHead = this.head; // used to increment the row south
+		Node currNode = this.head; // used to increment the node east
 		
-		while (currRowHead != null ) { // start on the first row then print what the current row is 
-			// start at the head of the row and increment east while printing
+		while (currRowHead != null ) { //search through nodes to find specific node
 			while (currNode != null) { 
 				if(currNode._y == y && currNode._x == x)
 				{
