@@ -47,6 +47,11 @@ public class Node implements Serializable {
 		return accessable;
 	}
 	
+	public void print()
+	{
+		System.out.println("My coordinates are " + _x + " , "+ _y + "");
+	}
+	
 }
 
 //public class Employee implements Serializable {
