@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<floor>
+	<tile>
+		<y>0</y>
+		<x>0</x>
+	</tile>
+	<tile>
+		<y>0</y>
+		<x>1</x>
+	</tile>
+	<tile>
+		<y>0</y>
+		<x>2</x>
+	</tile>
+	<tile>
+		<y>1</y>
+		<x>0</x>
+	</tile>
+	<tile>
+		<y>1</y>
+		<x>1</x>
+	</tile>
+	<tile>
+		<y>1</y>
+		<x>2</x>
+	</tile>
+	<tile>
+		<y>2</y>
+		<x>0</x>
+	</tile>
+	<tile>
+		<y>2</y>
+		<x>1</x>
+	</tile>
+	<tile>
+		<y>2</y>
+		<x>2</x>
+	</tile>
+</floor>

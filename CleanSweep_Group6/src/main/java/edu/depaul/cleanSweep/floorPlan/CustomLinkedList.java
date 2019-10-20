@@ -1,10 +1,23 @@
 package edu.depaul.cleanSweep.floorPlan;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 public class CustomLinkedList {
-	private Node head; // head of list 
-	private Node tail; // tail of list
-	private Node currRowHead; // place saver for the current row's head node
-	private Node tmpNodeHolder; // place saver for node connections 
+	private FloorTile head; // head of list 
+	private FloorTile tail; // tail of list
+	private FloorTile currRowHead; // place saver for the current row's head node
+	private FloorTile tmpNodeHolder; // place saver for node connections 
 
 	// constructor
 	public CustomLinkedList() {
@@ -18,7 +31,7 @@ public class CustomLinkedList {
 	public void insert(int y, int x) 
 	{ 
 		// Create a new node with given data 
-		Node new_node = new Node(y, x); 
+		FloorTile new_node = new FloorTile(y, x); 
 
 		// if the custom linked list is empty then make the new node as head 
 		if (this.head == null) { 
@@ -30,7 +43,7 @@ public class CustomLinkedList {
 		
 		// else the linked list is not empty
 		} else {  
-			Node last = this.tail; // get the most recent tail
+			FloorTile last = this.tail; // get the most recent tail
 			
 			// if the new node is in the same row as the head 
 			if (this.head._y == new_node._y) {
@@ -73,28 +86,29 @@ public class CustomLinkedList {
 				this.tail = new_node;
 			}
 		} 
+//		System.out.println("inserted node (" + y + ", " + x + ")"); // used for testing
 	} 
 	
-	public Node getHead() {
+	public FloorTile getHead() {
 		return this.head;
 	}
 	
-	public Node getTail() {
+	public FloorTile getTail() {
 		return this.tail;
 	}
 	
-	public Node getCurrRowHead() {
+	public FloorTile getCurrRowHead() {
 		return this.currRowHead;
 	}
 	
-	public Node getTmpNodeHolder() {
+	public FloorTile getTmpNodeHolder() {
 		return this.tmpNodeHolder;
 	}
 
 	// Method to print the LinkedList. 
 	public void printList() { 
-		Node currRowHead = this.head; // used to increment the row south for printing
-		Node currNode = this.head; // used to increment the node east for printing
+		FloorTile currRowHead = this.head; // used to increment the row south for printing
+		FloorTile currNode = this.head; // used to increment the node east for printing
 		int counter = 0; // used to tell what the current row is
 		
 		while (currRowHead != null) { // start on the first row then print what the current row is
@@ -104,7 +118,7 @@ public class CustomLinkedList {
 			while (currNode != null) { 
 				// Print the coordinates at current node 
 				System.out.print("(" + currNode._y + ", " + currNode._x + "); "); 
-				System.out.print("accessibility : " + currNode.getAccessable());
+				System.out.print("accessibility : " + currNode.getAccessable() + " || ");
 				// Go to next node
 				currNode = currNode.east; 
 			}
@@ -116,10 +130,10 @@ public class CustomLinkedList {
 		} 
 	}
 	
-	public Node returnNode(int x, int y)
+	public FloorTile returnNode(int x, int y)
 	{
-		Node currRowHead = this.head; // used to increment the row south
-		Node currNode = this.head; // used to increment the node east
+		FloorTile currRowHead = this.head; // used to increment the row south
+		FloorTile currNode = this.head; // used to increment the node east
 		
 		while (currRowHead != null ) { //search through nodes to find specific node
 			while (currNode != null) { 
@@ -134,5 +148,44 @@ public class CustomLinkedList {
 			currNode = currRowHead; // reset the current node to the head of the next row
 		}
 		return null;
+	}
+	
+	public void convertXMLToCustomLinkedList(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		 
+		//Build Document
+		Document document = builder.parse(xmlFile);
+		 
+		//Normalize the XML Structure; It's just too important !!
+		document.getDocumentElement().normalize();
+		 
+		//Get the root node "floor" with tiles inside
+//		Element root = document.getDocumentElement(); // used for testing
+//		System.out.println(root.getNodeName()); // used for testing
+		 
+		//Get all floor tiles
+		NodeList nList = document.getElementsByTagName("tile");
+//		System.out.println("============================"); // used for testing
+
+		// loop through the listed floor tiles and convert them into FloorTile objects
+		for (int count = 0; count < nList.getLength(); count++) {
+			Node node = nList.item(count); // create a temporary node full of tile information as string
+//			System.out.println("");    //Just a separator
+			if (node != null) {
+				//Print each node's detail
+				Element eElement = (Element) node; // used to access tile's elements, if node exists convert to element format
+				int y = Integer.parseInt(eElement.getElementsByTagName("y").item(0).getTextContent()); // get Y
+				int x = Integer.parseInt(eElement.getElementsByTagName("x").item(0).getTextContent()); // get X
+//				System.out.println("Y : " + y); // used for testing
+//				System.out.println("X : " + x); // used for testing
+				this.insert(y, x);
+//				System.out.println("Y : "  + eElement.getElementsByTagName("y").item(0).getTextContent()); // used for testing
+//				System.out.println("X : "  + eElement.getElementsByTagName("x").item(0).getTextContent()); // used for testing
+			}
+		}
+		
+		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
+		System.out.println(); // used as a separator
 	}
 }
