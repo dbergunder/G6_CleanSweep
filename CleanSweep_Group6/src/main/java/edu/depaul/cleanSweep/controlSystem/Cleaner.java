@@ -4,7 +4,7 @@ import edu.depaul.cleanSweep.cell.CellNode;
 import edu.depaul.cleanSweep.cell.SideType;
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
-import edu.depaul.cleanSweep.floorPlan.Node;
+import edu.depaul.cleanSweep.floorPlan.FloorTile;
 
 import org.javatuples.Pair;
 
@@ -23,7 +23,7 @@ public class Cleaner {
 	private boolean almostAtCapacity;
 	private String currStatus = new String("No status yet");
 
-	private Node currNode;
+	private FloorTile currNode;
 	private char headingTowards = 'N';
 
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
@@ -35,18 +35,18 @@ public class Cleaner {
 
 	}
 
-	public Cleaner(int battery, int dirtCapacity, Node node) {
+	public Cleaner(int battery, int dirtCapacity, FloorTile node) {
 		currBattery = battery;
 		currDirtCapacity = dirtCapacity;
 		currNode = node;
 	}
 	
-	public void setCurrNode(Node n) {
+	public void setCurrNode(FloorTile n) {
 		currNode = n;
 	}
 
 	
-	public Node getCurrNode() {
+	public FloorTile getCurrNode() {
 		return currNode;
 	}
 	

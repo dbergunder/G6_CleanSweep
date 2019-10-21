@@ -7,13 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "node")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class Node implements Serializable {
+public class FloorTile implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public Node north; 
-	public Node south; 
-	public Node east; 
-	public Node west;
+	public FloorTile north; 
+	public FloorTile south; 
+	public FloorTile east; 
+	public FloorTile west;
 	public int _x;
 	public int _y;
 //	int surfaceType;
@@ -21,10 +21,14 @@ public class Node implements Serializable {
 //	boolean visited;
 	boolean accessable;
 //	boolean chargingStation;
-
+	
+	public FloorTile() {
+		super();
+	}
+	
 	// Constructor 
 	// will make floorplan a java object from xml, which will allow for these nodes to be inserted
-	Node(int y, int x) 
+	public FloorTile(int y, int x) 
 	{ 
 		north = null;
 		south = null; 

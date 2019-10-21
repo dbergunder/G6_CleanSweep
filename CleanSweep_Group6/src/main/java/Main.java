@@ -1,12 +1,26 @@
 import edu.depaul.cleanSweep.controlSystem.*;
 import edu.depaul.cleanSweep.floorPlan.*;
 
-public class Main {
-	
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.*;
+import java.io.*; 
+
+class Main {
+
+	private static CustomLinkedList xmlFloorPlan = new CustomLinkedList();
 	private static CustomLinkedList myFloor = new CustomLinkedList();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		// TODO Auto-generated method stub
+		
+		//Read the Sample Floor Plan XML file
+		File xmlFile = new File("files/SamplePlan.xml");
+//		System.out.println(xmlFile.exists()); // used for testing
+		
+		// convert xml file into linked list
+		xmlFloorPlan.convertXMLToCustomLinkedList(xmlFile);
 		
 		//Create cleaner, and create floor plan of 100 tiles. 
 		//Started moving around floor, should run into obstacles.

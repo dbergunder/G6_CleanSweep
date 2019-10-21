@@ -5,10 +5,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.depaul.cleanSweep.floorPlan.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class FloorPlanTest {
 	private CustomLinkedList test = new CustomLinkedList();
@@ -60,8 +65,24 @@ public class FloorPlanTest {
 		assertEquals(0, test.getCurrRowHead()._x);
 		assertEquals(0, test.getTmpNodeHolder()._y);
 		assertEquals(2, test.getTmpNodeHolder()._x);
-	//	assertEquals(1, test.getHead().east._x);
-	//	assertEquals(0, test.getHead().east._y);
-		// test.printList(); this tests that the list prints out (more to come)
+		
 	}
+	
+	@Test
+	void FloorPlanTest_ConvertsXMLFileToCustomLinkedList() throws ParserConfigurationException, SAXException, IOException{
+		File xmlFile = new File("files/SamplePlan.xml");
+		
+		test.convertXMLToCustomLinkedList(xmlFile);
+
+		assertEquals(0, test.getHead()._y);
+		assertEquals(0, test.getHead()._x);
+		assertEquals(2, test.getTail()._y);
+		assertEquals(2, test.getTail()._x);
+		assertEquals(2, test.getCurrRowHead()._y);
+		assertEquals(0, test.getCurrRowHead()._x);
+		assertEquals(1, test.getTmpNodeHolder()._y);
+		assertEquals(2, test.getTmpNodeHolder()._x);
+	}
+	
+	// TODO test.printList()
 }
