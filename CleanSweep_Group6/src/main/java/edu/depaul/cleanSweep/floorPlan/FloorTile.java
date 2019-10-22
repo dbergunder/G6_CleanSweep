@@ -56,6 +56,16 @@ public class FloorTile implements Serializable {
 		System.out.println("My coordinates are " + _x + " , "+ _y + "");
 	}
 	
+	
+	public int get_x() {
+		return _x;
+	}
+	
+	public int get_y() {
+		return _y;
+	}
+	
+	
 }
 
 //public class Employee implements Serializable {
