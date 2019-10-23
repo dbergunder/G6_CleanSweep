@@ -4,9 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
+import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -78,4 +83,21 @@ class CleanerTest {
         String string2 = cleaner.getCleanerStatus();
 		assertEquals(string1, string2);
 	}
+
+	@Test
+	void CleanerHistory_AccuratelyReportsHistory() throws IOException, SAXException, ParserConfigurationException {
+
+		Cleaner cleaner = new Cleaner();
+
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(new File("files/SamplePlan.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+		System.out.println(cleaner.getCurrNode()._x + "  " + cleaner.getCurrNode()._y);
+
+
+	}
+
 }

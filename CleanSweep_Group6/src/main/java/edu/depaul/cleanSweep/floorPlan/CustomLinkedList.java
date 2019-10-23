@@ -185,7 +185,7 @@ public class CustomLinkedList {
 			}
 		}
 		
-		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
-		System.out.println(); // used as a separator
+		//this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
+		//System.out.println(); // used as a separator
 	}
 }

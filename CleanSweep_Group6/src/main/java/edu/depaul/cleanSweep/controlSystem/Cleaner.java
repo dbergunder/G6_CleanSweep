@@ -8,6 +8,7 @@ import edu.depaul.cleanSweep.floorPlan.FloorTile;
 
 import org.javatuples.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class Cleaner {
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
 
+	private List<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+
 	public Cleaner(){
 
 	}
@@ -49,8 +52,8 @@ public class Cleaner {
 	public FloorTile getCurrNode() {
 		return currNode;
 	}
-	
-	
+
+
 	/*
 	 * According to the current heading direction, first check if the corresponding side is blocked,
 	 * and then move to the next cell.
@@ -180,6 +183,12 @@ public class Cleaner {
 			currentCell.decreaseDirt();
 			vacuumBag.add(
 					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
+
+			//todo - add surfacetype to history once surfacetype is a member of FLoorTile see:
+			// https://trello.com/c/UAVH322u/6-floor-plan-manager-as-a-user-i-expect-the-floor-plan-system-to-identify-different-types-of-cells-and-process-represent-them-acco
+			cleanerHistory.add(
+					new FloorTile(getCurrNode()._y, getCurrNode()._x)
+			);
 			checkBagSize();
 		}
 	}
