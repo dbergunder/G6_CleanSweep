@@ -31,7 +31,7 @@ public class CustomLinkedList {
 	public void insert(int y, int x) 
 	{ 
 		// Create a new node with given data 
-		FloorTile new_node = new FloorTile(y, x); 
+		FloorTile new_node = new FloorTile(y, x, true);
 
 		// if the custom linked list is empty then make the new node as head 
 		if (this.head == null) { 

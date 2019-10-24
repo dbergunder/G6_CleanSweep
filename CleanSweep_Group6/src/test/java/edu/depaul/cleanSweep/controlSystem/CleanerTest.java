@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
+import edu.depaul.cleanSweep.floorPlan.FloorTile;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -86,18 +87,38 @@ class CleanerTest {
 
 	@Test
 	void CleanerHistory_AccuratelyReportsHistory() throws IOException, SAXException, ParserConfigurationException {
-
 		Cleaner cleaner = new Cleaner();
 
 		var floorPlan = new CustomLinkedList();
 
-		floorPlan.convertXMLToCustomLinkedList(new File("files/SamplePlan.xml"));
+		floorPlan.convertXMLToCustomLinkedList(
+		        new File("files/SamplePlan.xml"));
 
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 
-		System.out.println(cleaner.getCurrNode()._x + "  " + cleaner.getCurrNode()._y);
+        cleaner.changeHeading('S');
 
+        // Assert cleaner is at the origin
+		assertEquals(0, cleaner.getCurrNode()._x);
+        assertEquals(0, cleaner.getCurrNode()._y);
 
-	}
+        cleaner.moveAhead();
 
+        // Assert cleaner x hasnt change, but the y has
+        assertEquals(0, getFloorTile(cleaner, 1)._x);
+        assertEquals(1, getFloorTile(cleaner, 1)._y);
+
+        cleaner.moveAhead();
+
+        assertEquals(0, getFloorTile(cleaner, 2)._x);
+        assertEquals(2, getFloorTile(cleaner, 2)._y);
+
+        cleaner.moveAhead();
+
+        assertEquals(3, cleaner.getCleanerHistory().size());
+    }
+
+    private FloorTile getFloorTile(Cleaner cleaner, int index){
+	    return (FloorTile) cleaner.getCleanerHistory().toArray()[index];
+    }
 }

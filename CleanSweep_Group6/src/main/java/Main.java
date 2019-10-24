@@ -20,13 +20,13 @@ class Main {
 //		System.out.println(xmlFile.exists()); // used for testing
 		
 		// convert xml file into linked list
-		xmlFloorPlan.convertXMLToCustomLinkedList(xmlFile);
+		//xmlFloorPlan.convertXMLToCustomLinkedList(xmlFile);
 		
 		//Create cleaner, and create floor plan of 100 tiles. 
 		//Started moving around floor, should run into obstacles.
 		Cleaner myCleaner = new Cleaner();
 		createFloor();
-		myCleaner.setCurrNode(myFloor.returnNode(1, 1)); 
+		myCleaner.setCurrNode(myFloor.returnNode(1, 1));
 		for (int i = 0; i < 10;i++)
 		{
 			//TODO update when navigation is done

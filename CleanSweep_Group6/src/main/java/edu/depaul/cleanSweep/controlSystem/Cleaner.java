@@ -32,7 +32,7 @@ public class Cleaner {
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
 
-	private List<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
 	public Cleaner(){
 
@@ -46,11 +46,12 @@ public class Cleaner {
 	
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
+		cleanerHistory.add(copyTile(this.currNode));
 	}
 
 	
 	public FloorTile getCurrNode() {
-		return currNode;
+		return currNode != null ? currNode : new FloorTile(0, 0);
 	}
 
 
@@ -60,29 +61,37 @@ public class Cleaner {
 	 */
 	public boolean moveAhead() {
 		switch(this.headingTowards) {
+			//todo - add surfacetype to history once surfacetype is a member of FLoorTile see:
+			// https://trello.com/c/UAVH322u/6-floor-plan-manager-as-a-user-i-expect-the-floor-plan-system-to-identify-different-types-of-cells-and-process-represent-them-acco
+
 			case 'N':
 				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.currNode = currNode.north;
+					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 				break;
 			case 'S':
 				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.currNode = currNode.south;
+					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 				break;
 			case 'W':
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
+					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 				break;
 			case 'E':
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
+					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
+
 				break;
 		}
 		printCoordinate();
@@ -184,11 +193,6 @@ public class Cleaner {
 			vacuumBag.add(
 					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
 
-			//todo - add surfacetype to history once surfacetype is a member of FLoorTile see:
-			// https://trello.com/c/UAVH322u/6-floor-plan-manager-as-a-user-i-expect-the-floor-plan-system-to-identify-different-types-of-cells-and-process-represent-them-acco
-			cleanerHistory.add(
-					new FloorTile(getCurrNode()._y, getCurrNode()._x)
-			);
 			checkBagSize();
 		}
 	}
@@ -226,5 +230,15 @@ public class Cleaner {
 
 	public void changeHeading(char h){
 		headingTowards = h;
+	}
+
+	public char getHeading() {return this.headingTowards;}
+
+	public ArrayList<FloorTile> getCleanerHistory(){
+		return this.cleanerHistory;
+	}
+
+	private FloorTile copyTile(FloorTile tileToCopy){
+		return new FloorTile(tileToCopy._y, tileToCopy._x);
 	}
 }

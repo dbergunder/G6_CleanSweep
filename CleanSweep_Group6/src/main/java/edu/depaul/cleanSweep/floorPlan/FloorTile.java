@@ -28,7 +28,7 @@ public class FloorTile implements Serializable {
 	
 	// Constructor 
 	// will make floorplan a java object from xml, which will allow for these nodes to be inserted
-	public FloorTile(int y, int x) 
+	public FloorTile(int y, int x)
 	{ 
 		north = null;
 		south = null; 
@@ -41,6 +41,16 @@ public class FloorTile implements Serializable {
 //		visited = false;
 		accessable = false;
 //		chargingStation = false;
+	}
+
+	public FloorTile(int y, int x , boolean isAccessable){
+		north = null;
+		south = null;
+		east = null;
+		west = null;
+		_x = x;
+		_y = y;
+		accessable = isAccessable;
 	}
 	
 	public void setAccessable(boolean f) {
