@@ -16,11 +16,11 @@ public class FloorTile implements Serializable {
 	public FloorTile west;
 	public int _x;
 	public int _y;
-//	int surfaceType;
-//	boolean dirt;
-//	boolean visited;
+	TileType surfaceType;
+	boolean isClean;
 	boolean accessable;
-//	boolean chargingStation;
+	boolean chargingStation;
+	int unitsOfDirt;
 	
 	public FloorTile() {
 		super();
@@ -36,13 +36,37 @@ public class FloorTile implements Serializable {
 		west = null;
 		_x = x;
 		_y = y;
-//		surfaceType = 1;
-//		dirt = false;
-//		visited = false;
-		accessable = false;
-//		chargingStation = false;
+		
+		// Default values, will be an easy tile. 
+		surfaceType = TileType.BARE_FLOOR;
+		isClean = true;
+		accessable = true;
+		chargingStation = false;
+		unitsOfDirt = 0;
 	}
 	
+	public FloorTile(int y, int x, int dirtAmount, TileType type) 
+	{
+		north = null;
+		south = null; 
+		east = null; 
+		west = null;
+		_x = x;
+		_y = y;
+		surfaceType = type;
+		unitsOfDirt = dirtAmount;
+		isClean = true;
+		if (unitsOfDirt > 0)
+		{
+			isClean = false;
+		}
+		
+		// Default values, will be an easy tile. 
+		accessable = true;
+		chargingStation = false;
+
+	}
+
 	public void setAccessable(boolean f) {
 		accessable = f;
 	}
@@ -51,9 +75,47 @@ public class FloorTile implements Serializable {
 		return accessable;
 	}
 	
+	public void setSurfaceType(TileType type){
+		surfaceType = type;
+	}
+	
+	public TileType getSurfaceType() {
+		return surfaceType;
+	}
+	
+	public void setClean(boolean clean) {
+		isClean = clean;
+	}
+	
+	public boolean getClean() {
+		return isClean;
+	}
+	
+	public void setUnitsOfDirt(int units) {
+		if (unitsOfDirt > 0)
+		{
+			isClean = false;
+		}
+		unitsOfDirt = units;
+	}
+	
+	public int getUnitsOfDirt() {
+		return unitsOfDirt;
+	}
+	
+	public void setChargeStation(boolean chargeStation) {
+		chargingStation = chargeStation;
+	}
+	
+	public boolean getChargeStation() {
+		return chargingStation;
+	}
+	
 	public void print()
 	{
 		System.out.println("My coordinates are " + _x + " , "+ _y + "");
+		System.out.println("isClean " + isClean + " isChargingStation " + chargingStation);
+		System.out.println(" Units of Dirt " + unitsOfDirt + " surfaceType " + surfaceType);
 	}
 	
 	
@@ -63,6 +125,16 @@ public class FloorTile implements Serializable {
 	
 	public int get_y() {
 		return _y;
+	}
+	
+	public void decreaseDirtAmount() {
+		if (unitsOfDirt <= 1){
+			isClean = true;
+			unitsOfDirt = 0;
+			return;
+		}
+		unitsOfDirt = unitsOfDirt -1;
+		return;
 	}
 	
 	
