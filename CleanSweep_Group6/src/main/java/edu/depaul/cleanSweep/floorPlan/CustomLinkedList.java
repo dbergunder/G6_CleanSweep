@@ -123,6 +123,8 @@ public class CustomLinkedList {
 				// Print the coordinates at current node 
 				System.out.print("(" + currNode._y + ", " + currNode._x + "); "); 
 				System.out.print("accessibility : " + currNode.getAccessable() + " || ");
+				System.out.print(" charging stations : " + currNode.getChargeStation() + "||");
+				System.out.print("amount of dirt : " + currNode.getUnitsOfDirt() + " ||");
 				// Go to next node
 				currNode = currNode.east; 
 			}
