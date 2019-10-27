@@ -348,7 +348,7 @@
 	<tile>
 		<y>4</y>
 		<x>7</x>
-		<surfaceType>1</surfaceType>
+		<surfaceType>3</surfaceType>
 		<accessible>true</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
@@ -420,7 +420,7 @@
 	<tile>
 		<y>5</y>
 		<x>7</x>
-		<surfaceType>1</surfaceType>
+		<surfaceType>3</surfaceType>
 		<accessible>true</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
