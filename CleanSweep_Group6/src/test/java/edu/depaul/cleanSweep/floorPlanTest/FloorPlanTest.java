@@ -84,5 +84,13 @@ public class FloorPlanTest {
 		assertEquals(2, test.getTmpNodeHolder()._x);
 	}
 	
+	@Test
+	void FloorPlanTest_TestAttributes() throws ParserConfigurationException, SAXException, IOException{
+		File xmlFile = new File("files/SamplePlanWithAttributes.xml");
+		
+		test.createFloorFromXML(xmlFile);
+		test.printList();
+	}
+	
 	// TODO test.printList()
 }
