@@ -8,7 +8,7 @@ import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import edu.depaul.cleanSweep.floorPlan.FloorTile;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+//import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -104,6 +104,7 @@ class CleanerTest {
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 		System.out.println("origin location\n" + cleaner.printCoordinate());
 		cleaner.changeHeading('E');
+		assertEquals('E', cleaner.getHeading());
 		System.out.println("make a move");
 		cleaner.moveAhead();
 		assertEquals(1, cleaner.getCurrNode().get_x());
@@ -129,6 +130,7 @@ class CleanerTest {
 		//move ahead
 		cleaner.setCurrNode(test.getHead());
 		cleaner.changeHeading('E');
+		assertEquals('E', cleaner.getHeading());
 		System.out.println("cleaner is towards east");
 		System.out.println("current location\n" + cleaner.printCoordinate());
 		assert(cleaner.getCurrNode()._x == 0);
@@ -156,6 +158,7 @@ class CleanerTest {
 		
 		//move right
 		cleaner.changeHeading('N');
+		assertEquals('N', cleaner.getHeading());
 		System.out.println("\ncleaner is towards north");
 		System.out.println("turn right");
 		cleaner.moveRight();

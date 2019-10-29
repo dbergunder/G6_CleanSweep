@@ -217,4 +217,9 @@ public class Cleaner {
 	public void changeHeading(char h){
 		headingTowards = h;
 	}
+	
+	public char getHeading() {return this.headingTowards;}
+	
+	
+	
 }
