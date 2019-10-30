@@ -56,34 +56,35 @@ public class Cleaner {
 	 * and then move to the next cell.
 	 */
 	public boolean moveAhead() {
+		boolean flag = false;
 		switch(this.headingTowards) {
 			case 'N':
 				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.currNode = currNode.north;
-					return true;
+					flag = true;
 				}
 				break;
 			case 'S':
 				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.currNode = currNode.south;
-					return true;
+					flag = true;
 				}
 				break;
 			case 'W':
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
-					return true;
+					flag = true;
 				}
 				break;
 			case 'E':
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
-					return true;
+					flag = true;
 				}
 				break;
 		}
-		printCoordinate();
-		return false;
+		System.out.println(printCoordinate());
+		return flag;
 		//change current battery level
 	}
 	/*
@@ -108,7 +109,6 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
 		//change current battery level
 	}
 
@@ -131,7 +131,6 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
 		//change current battery level
 	}
 
@@ -154,7 +153,7 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
+		
 		//change current battery level
 	}
 
@@ -218,4 +217,9 @@ public class Cleaner {
 	public void changeHeading(char h){
 		headingTowards = h;
 	}
+	
+	public char getHeading() {return this.headingTowards;}
+	
+	
+	
 }
