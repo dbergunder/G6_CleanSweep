@@ -1,9 +1,11 @@
 package edu.depaul.cleanSweep.controlSystem;
 
+import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class Cleaner {
 	
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
-		cleanerHistory.add(copyTile(this.currNode));
+		//cleanerHistory.add(copyTile(this.currNode));
 	}
 
 	
@@ -64,9 +66,9 @@ public class Cleaner {
 			case 'N':
 				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.currNode = currNode.north;
-					cleanerHistory.add(copyTile(this.currNode));
-					return true;
+					//cleanerHistory.add(copyTile(this.currNode));
 					flag = true;
+					return true;
 				}
 				break;
 			case 'S':
@@ -78,13 +80,11 @@ public class Cleaner {
 			case 'W':
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
-					return true;
 				}
 				break;
 			case 'E':
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
-					return true;
 				}
 
 				break;
@@ -182,9 +182,9 @@ public class Cleaner {
 		}
 		else{
 			// Add to vaccumbag
-			currentCell.decreaseDirt();
+			currentTile.decreaseDirtAmount();
 			vacuumBag.add(
-					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
+					new Pair<Integer, TileType>(1, currentTile.getSurfaceType()));
 			checkBagSize();
 		}
 	}
@@ -222,5 +222,13 @@ public class Cleaner {
 
 	public void changeHeading(char h){
 		headingTowards = h;
+	}
+
+	public List<FloorTile> getCleanerHistory(){
+		return cleanerHistory;
+	}
+
+	public char getHeadingTowards() {
+		return headingTowards;
 	}
 }
