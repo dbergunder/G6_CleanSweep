@@ -27,12 +27,8 @@ public class CustomLinkedList {
 		this.tmpNodeHolder = null;
 	}
 	
-	// Method to insert a new node 
-	public void insert(int y, int x) 
-	{ 
-		// Create a new node with given data 
-		FloorTile new_node = new FloorTile(y, x, true);
-
+	public void insertIntoList(FloorTile new_node)
+	{
 		// if the custom linked list is empty then make the new node as head 
 		if (this.head == null) { 
 			
@@ -86,7 +82,15 @@ public class CustomLinkedList {
 				this.tail = new_node;
 			}
 		} 
-//		System.out.println("inserted node (" + y + ", " + x + ")"); // used for testing
+//		System.out.println("inserted node (" + y + ", " + x + ")"); // used for testing	
+	}
+	
+	// Method to insert a new node 
+	public void insert(int y, int x) 
+	{ 
+		// Create a new node with given data 
+		FloorTile new_node = new FloorTile(y, x); 
+		insertIntoList(new_node);
 	} 
 	
 	public FloorTile getHead() {
@@ -119,6 +123,8 @@ public class CustomLinkedList {
 				// Print the coordinates at current node 
 				System.out.print("(" + currNode._y + ", " + currNode._x + "); "); 
 				System.out.print("accessibility : " + currNode.getAccessable() + " || ");
+				System.out.print(" charging stations : " + currNode.getChargeStation() + "||");
+				System.out.print("amount of dirt : " + currNode.getUnitsOfDirt() + " ||");
 				// Go to next node
 				currNode = currNode.east; 
 			}
@@ -188,4 +194,46 @@ public class CustomLinkedList {
 		//this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
 		//System.out.println(); // used as a separator
 	}
+	public void createFloorFromXML(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		 
+		//Build Document
+		Document document = builder.parse(xmlFile);
+		 
+		//Normalize the XML Structure; It's just too important !!
+		document.getDocumentElement().normalize();
+		 
+		//Get all floor tiles
+		NodeList nList = document.getElementsByTagName("tile");
+
+		// loop through the listed floor tiles and convert them into FloorTile objects
+		for (int count = 0; count < nList.getLength(); count++) {
+			Node node = nList.item(count); // create a temporary node full of tile information as string
+			if (node != null) {
+				//Print each node's detail
+				Element eElement = (Element) node; // used to access tile's elements, if node exists convert to element format
+				int y = Integer.parseInt(eElement.getElementsByTagName("y").item(0).getTextContent()); // get Y
+				int x = Integer.parseInt(eElement.getElementsByTagName("x").item(0).getTextContent()); // get X
+				int type = Integer.parseInt(eElement.getElementsByTagName("surfaceType").item(0).getTextContent()); // get surfacetype
+				boolean accessible = Boolean.parseBoolean(eElement.getElementsByTagName("accessible").item(0).getTextContent()); // get accessible
+				int dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent()); // get dirt
+				boolean chargingStation =  Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent()); // get chargingStation
+				this.insertTile(y, x, dirt, accessible, chargingStation, type);
+				}
+		}
+		
+		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
+		System.out.println(); // used as a separator
+	}
+	
+	public void insertTile(int y, int x, int dirtAmount, boolean accessible, boolean chargingStation, int floortype) 
+	{ 
+		TileType type = TileType.fromInteger(floortype);
+		// Create a new node with given data 
+		FloorTile new_node = new FloorTile(y, x, dirtAmount, type);
+		new_node.setChargeStation(chargingStation);
+		new_node.setAccessable(accessible);
+		insertIntoList(new_node);
+	} 
 }

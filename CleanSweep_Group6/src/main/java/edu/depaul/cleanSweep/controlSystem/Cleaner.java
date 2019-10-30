@@ -1,10 +1,6 @@
 package edu.depaul.cleanSweep.controlSystem;
 
-import edu.depaul.cleanSweep.cell.CellNode;
-import edu.depaul.cleanSweep.cell.SideType;
-import edu.depaul.cleanSweep.cell.Cell;
-import edu.depaul.cleanSweep.cell.SurfaceType;
-import edu.depaul.cleanSweep.floorPlan.FloorTile;
+import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
 
@@ -30,7 +26,7 @@ public class Cleaner {
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
 	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
 	// In order to traverse through the history, start at the head, and work downward
-	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
+	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
@@ -60,6 +56,7 @@ public class Cleaner {
 	 * and then move to the next cell.
 	 */
 	public boolean moveAhead() {
+		boolean flag = false;
 		switch(this.headingTowards) {
 			//todo - add surfacetype to history once surfacetype is a member of FLoorTile see:
 			// https://trello.com/c/UAVH322u/6-floor-plan-manager-as-a-user-i-expect-the-floor-plan-system-to-identify-different-types-of-cells-and-process-represent-them-acco
@@ -69,33 +66,31 @@ public class Cleaner {
 					this.currNode = currNode.north;
 					cleanerHistory.add(copyTile(this.currNode));
 					return true;
+					flag = true;
 				}
 				break;
 			case 'S':
 				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.currNode = currNode.south;
-					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 				break;
 			case 'W':
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
-					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 				break;
 			case 'E':
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
-					cleanerHistory.add(copyTile(this.currNode));
 					return true;
 				}
 
 				break;
 		}
-		printCoordinate();
-		return false;
+		System.out.println(printCoordinate());
+		return flag;
 		//change current battery level
 	}
 	/*
@@ -120,7 +115,6 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
 		//change current battery level
 	}
 
@@ -143,7 +137,6 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
 		//change current battery level
 	}
 
@@ -166,17 +159,17 @@ public class Cleaner {
 				this.moveAhead();
 				break;
 		}
-		printCoordinate();
+		
 		//change current battery level
 	}
 
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
-	public void cleanSurface(Cell currentCell){
-		SurfaceType surfaceCleaned = currentCell.getSurface();
+	public void cleanSurface(FloorTile currentTile){
+		TileType surfacedCleaned = currentTile.getSurfaceType();
 
 		// Cell is currently clean. No need to do anything
-		if(currentCell.getDirtAmount() <= 0){
+		if(currentTile.getClean() == true){
 			return;
 		}
 
@@ -192,7 +185,6 @@ public class Cleaner {
 			currentCell.decreaseDirt();
 			vacuumBag.add(
 					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
-
 			checkBagSize();
 		}
 	}
@@ -230,15 +222,5 @@ public class Cleaner {
 
 	public void changeHeading(char h){
 		headingTowards = h;
-	}
-
-	public char getHeading() {return this.headingTowards;}
-
-	public ArrayList<FloorTile> getCleanerHistory(){
-		return this.cleanerHistory;
-	}
-
-	private FloorTile copyTile(FloorTile tileToCopy){
-		return new FloorTile(tileToCopy._y, tileToCopy._x);
 	}
 }
