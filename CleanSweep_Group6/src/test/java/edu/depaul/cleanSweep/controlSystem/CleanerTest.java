@@ -1,20 +1,13 @@
 package edu.depaul.cleanSweep.controlSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import edu.depaul.cleanSweep.cell.Cell;
-import edu.depaul.cleanSweep.cell.SurfaceType;
-import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
-import edu.depaul.cleanSweep.floorPlan.FloorTile;
+import edu.depaul.cleanSweep.controlSystem.*;
+import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
 
-import java.io.ByteArrayOutputStream;
+
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,14 +19,14 @@ class CleanerTest {
 	void DirtIntake_DoesNotMaxCapacity(){
 		Cleaner cleaner = new Cleaner();
 
-		Cell cell1 = new Cell(10, SurfaceType.LOWPILE);
+		FloorTile cell1 = new FloorTile(0,0,10,TileType.LOW_PILE);
 
-		assertEquals(10, cell1.getDirtAmount());
+		assertEquals(10, cell1.getUnitsOfDirt());
 		assertEquals(0, cleaner.getCurrentBagSize());
 
 		cleaner.cleanSurface(cell1);
 
-		assertEquals(9, cell1.getDirtAmount());
+		assertEquals(9, cell1.getUnitsOfDirt());
 		assertEquals(1, cleaner.getCurrentBagSize());
 	}
 
@@ -42,15 +35,15 @@ class CleanerTest {
 		Cleaner cleaner = new Cleaner();
 
 		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
-			Cell cell = new Cell(10, SurfaceType.BARE);
+			FloorTile cell = new FloorTile(0,i,10,TileType.BARE_FLOOR);
 			cleaner.cleanSurface(cell);
-			assertEquals(9, cell.getDirtAmount());
+			assertEquals(9, cell.getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
-		Cell uncleanedCell = new Cell(12, SurfaceType.LOWPILE);
+		FloorTile uncleanedCell = new FloorTile(0,0,12,TileType.LOW_PILE);
 
 		cleaner.cleanSurface(uncleanedCell);
 
@@ -58,26 +51,23 @@ class CleanerTest {
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
 		// Assert the cell was NOT cleaned
-		assertEquals(12, uncleanedCell.getDirtAmount());
+		assertEquals(12, uncleanedCell.getUnitsOfDirt());
 	}
 
 	// todo - remove unit test once/if ui is written
 	@Test
 	void CapacityNotifications_NotifiesWhenFull(){
-		// redirect stdout
-		PrintStream savedStdout = System.out;
-
 		Cleaner cleaner = new Cleaner();
 
 		for(int i: IntStream.range(1, 50).boxed().collect(Collectors.toList())){
-
-			Cell cell = new Cell(10, SurfaceType.BARE);
+			FloorTile cell = new FloorTile(0,i,10,TileType.BARE_FLOOR);
 			cleaner.cleanSurface(cell);
-			assertEquals(9, cell.getDirtAmount());
+			assertEquals(9, cell.getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 
-		cleaner.cleanSurface(new Cell(10, SurfaceType.BARE));
+		FloorTile uncleanedCell = new FloorTile(0,0,10,TileType.BARE_FLOOR);
+		cleaner.cleanSurface(uncleanedCell);
         String string1 = new String("The Clean Sweep is out of space for dirt!");
         String string2 = cleaner.getCleanerStatus();
 		assertEquals(string1, string2);

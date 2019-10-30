@@ -1,10 +1,6 @@
 package edu.depaul.cleanSweep.controlSystem;
 
-import edu.depaul.cleanSweep.cell.CellNode;
-import edu.depaul.cleanSweep.cell.SideType;
-import edu.depaul.cleanSweep.cell.Cell;
-import edu.depaul.cleanSweep.cell.SurfaceType;
-import edu.depaul.cleanSweep.floorPlan.FloorTile;
+import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
 
@@ -29,7 +25,7 @@ public class Cleaner {
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
 	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
 	// In order to traverse through the history, start at the head, and work downward
-	private List<Pair<Integer, SurfaceType>> vacuumBag = new LinkedList<Pair<Integer, SurfaceType>>();
+	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
 	public Cleaner(){
 
@@ -159,11 +155,11 @@ public class Cleaner {
 
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
-	public void cleanSurface(Cell currentCell){
-		SurfaceType surfaceCleaned = currentCell.getSurface();
+	public void cleanSurface(FloorTile currentTile){
+		TileType surfacedCleaned = currentTile.getSurfaceType();
 
 		// Cell is currently clean. No need to do anything
-		if(currentCell.getDirtAmount() <= 0){
+		if(currentTile.getClean() == true){
 			return;
 		}
 
@@ -176,9 +172,8 @@ public class Cleaner {
 		}
 		else{
 			// Add to vaccumbag
-			currentCell.decreaseDirt();
-			vacuumBag.add(
-					new Pair<Integer, SurfaceType>(1, currentCell.getSurface()));
+			currentTile.decreaseDirtAmount(); //enforces 1 unit at a time
+			vacuumBag.add(new Pair<Integer, TileType>(1, currentTile.getSurfaceType()));
 			checkBagSize();
 		}
 	}
