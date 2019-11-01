@@ -6,7 +6,7 @@ import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.junit.jupiter.api.Test;
 
-
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,10 +16,10 @@ class CleanerTest {
 	private static final int MAX_DIRT_CAPACITY = 50;
 
 	@Test
-	void DirtIntake_DoesNotMaxCapacity(){
+	void DirtIntake_DoesNotMaxCapacity() throws IOException{
 		Cleaner cleaner = new Cleaner();
 
-		FloorTile cell1 = new FloorTile(0,0,10,TileType.LOW_PILE);
+		FloorTile cell1 = new FloorTile(0,0,10,TileType.LOWPILE);
 
 		assertEquals(10, cell1.getUnitsOfDirt());
 		assertEquals(0, cleaner.getCurrentBagSize());
@@ -31,11 +31,11 @@ class CleanerTest {
 	}
 
 	@Test
-	void DirtIntake_PerfectlyMaxCapacity(){
+	void DirtIntake_PerfectlyMaxCapacity() throws IOException{
 		Cleaner cleaner = new Cleaner();
 
 		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
-			FloorTile cell = new FloorTile(0,i,10,TileType.BARE_FLOOR);
+			FloorTile cell = new FloorTile(0,i,10,TileType.BARE);
 			cleaner.cleanSurface(cell);
 			assertEquals(9, cell.getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
@@ -43,7 +43,7 @@ class CleanerTest {
 
 		assertEquals(MAX_DIRT_CAPACITY, cleaner.getCurrentBagSize());
 
-		FloorTile uncleanedCell = new FloorTile(0,0,12,TileType.LOW_PILE);
+		FloorTile uncleanedCell = new FloorTile(0,0,12,TileType.LOWPILE);
 
 		cleaner.cleanSurface(uncleanedCell);
 
@@ -56,17 +56,17 @@ class CleanerTest {
 
 	// todo - remove unit test once/if ui is written
 	@Test
-	void CapacityNotifications_NotifiesWhenFull(){
+	void CapacityNotifications_NotifiesWhenFull() throws IOException{
 		Cleaner cleaner = new Cleaner();
 
 		for(int i: IntStream.range(1, 50).boxed().collect(Collectors.toList())){
-			FloorTile cell = new FloorTile(0,i,10,TileType.BARE_FLOOR);
+			FloorTile cell = new FloorTile(0,i,10,TileType.BARE);
 			cleaner.cleanSurface(cell);
 			assertEquals(9, cell.getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
 
-		FloorTile uncleanedCell = new FloorTile(0,0,10,TileType.BARE_FLOOR);
+		FloorTile uncleanedCell = new FloorTile(0,0,10,TileType.BARE);
 		cleaner.cleanSurface(uncleanedCell);
         String string1 = new String("The Clean Sweep is out of space for dirt!");
         String string2 = cleaner.getCleanerStatus();
@@ -75,7 +75,7 @@ class CleanerTest {
 	
 	
 	@Test
-	void OneCellAtATimeTest() {
+	void OneCellAtATimeTest() throws IOException {
 		
 		System.out.println("\nOneCellAtATimeTest");
 		
@@ -102,7 +102,7 @@ class CleanerTest {
 	}
 	
 	@Test
-	public void MoveIn4AxesTest() {
+	public void MoveIn4AxesTest() throws IOException {
 		System.out.println("\nMoveIn4AxesTest");
 		
 		CustomLinkedList test = new CustomLinkedList();
@@ -157,8 +157,18 @@ class CleanerTest {
 		cleaner.printCoordinate();
 	}
 	
-	
-	
-	
-	
+	@Test
+	void CleanerMovementOnBareFloorResultsInBatteryConsumptionTest() throws IOException {
+		Cleaner cleaner = new Cleaner();
+
+		for(int i: IntStream.range(1, 5).boxed().collect(Collectors.toList())){
+			FloorTile tile = new FloorTile(0,i,10,TileType.BARE);
+		}
+
+		FloorTile uncleanedCell = new FloorTile(0,0,10,TileType.BARE);
+		cleaner.cleanSurface(uncleanedCell);
+        String string1 = new String("The Clean Sweep is out of space for dirt!");
+        String string2 = cleaner.getCleanerStatus();
+		assertEquals(string1, string2);
+	}
 }

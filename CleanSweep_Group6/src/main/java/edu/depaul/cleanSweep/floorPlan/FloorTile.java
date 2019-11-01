@@ -38,7 +38,7 @@ public class FloorTile implements Serializable {
 		_y = y;
 		
 		// Default values, will be an easy tile. 
-		surfaceType = TileType.BARE_FLOOR;
+		surfaceType = TileType.BARE;
 		isClean = true;
 		accessable = true;
 		chargingStation = false;
@@ -83,6 +83,11 @@ public class FloorTile implements Serializable {
 		return surfaceType;
 	}
 	
+	public int getBatteryConsumption() {
+		TileType temp = getSurfaceType();
+		return temp.getValue();
+	}
+	
 	public void setClean(boolean clean) {
 		isClean = clean;
 	}
@@ -117,7 +122,6 @@ public class FloorTile implements Serializable {
 		System.out.println("isClean " + isClean + " isChargingStation " + chargingStation);
 		System.out.println(" Units of Dirt " + unitsOfDirt + " surfaceType " + surfaceType);
 	}
-	
 	
 	public int get_x() {
 		return _x;
