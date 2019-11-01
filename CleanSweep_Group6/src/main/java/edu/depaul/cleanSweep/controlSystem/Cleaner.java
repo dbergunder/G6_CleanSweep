@@ -94,6 +94,11 @@ public class Cleaner {
 		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
 		this.currBattery -= averagePowerCost;
 		
+		if (this.currNode.getChargeStation()) {
+			this.currBattery = MAX_BATTERY_POWER;
+			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+		}
+		
 		System.out.println(printCoordinate());
 		return flag;
 	}
@@ -231,6 +236,8 @@ public class Cleaner {
 	
 	public char getHeading() {return this.headingTowards;}
 	
-	
+	public double getBatteryPower() {
+		return currBattery;
+	}
 	
 }

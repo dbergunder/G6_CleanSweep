@@ -83,9 +83,9 @@ public class FloorTile implements Serializable {
 		return surfaceType;
 	}
 	
-	public int getBatteryConsumption() {
+	public double getBatteryConsumption() {
 		TileType temp = getSurfaceType();
-		return temp.getValue();
+		return Double.valueOf(temp.getValue());
 	}
 	
 	public void setClean(boolean clean) {
@@ -133,8 +133,8 @@ public class FloorTile implements Serializable {
 	
 	public void decreaseDirtAmount() {
 		if (unitsOfDirt <= 1){
-			isClean = true;
 			unitsOfDirt = 0;
+			isClean = true;
 			return;
 		}
 		unitsOfDirt = unitsOfDirt -1;
