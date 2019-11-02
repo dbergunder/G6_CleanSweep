@@ -1,7 +1,7 @@
 import edu.depaul.cleanSweep.controlSystem.*;
 import edu.depaul.cleanSweep.floorPlan.*;
+import edu.depaul.cleanSweep.diagnostics.*;
 
-import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
@@ -15,7 +15,7 @@ class Main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		// TODO Auto-generated method stub
 		
-		//Read the Sample Floor Plan XML file
+		// Read the Sample Floor Plan XML file
 		File xmlFile = new File("files/SamplePlan.xml");
 //		System.out.println(xmlFile.exists()); // used for testing
 		

@@ -126,228 +126,228 @@ public class FloorPlanTest {
 		//Low Pile
 		currTile = test.returnNode(3, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.LOW_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.LOWPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(3, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.LOW_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.LOWPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(3, 3);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.LOW_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.LOWPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(3, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.LOW_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.LOWPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(3, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.LOW_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.LOWPILE, currTile.getSurfaceType());
 		
 		//HIGH PILE
 		currTile = test.returnNode(5, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(6, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(7, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(5, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(6, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		currTile = test.returnNode(7, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.HIGH_PILE, currTile.getSurfaceType());
+		assertEquals(TileType.HIGHPILE, currTile.getSurfaceType());
 		
 		
 		//These tiles are all 1 unit of dirt, bare floor, accessible and not a charging station
 		currTile = test.returnNode(0, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(1, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(5, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(6, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(7, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 0);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(0, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(1, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(5, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(6, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(7, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 1);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(0, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(1, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 2);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 3);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 3);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 3);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 4);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(2, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(4, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 		
 		currTile = test.returnNode(8, 5);
 		assertEquals(1, currTile.getUnitsOfDirt());
-		assertEquals(TileType.BARE_FLOOR, currTile.getSurfaceType());
+		assertEquals(TileType.BARE, currTile.getSurfaceType());
 		assertEquals(true, currTile.getAccessable());
 		assertEquals(false, currTile.getChargeStation());
 	}

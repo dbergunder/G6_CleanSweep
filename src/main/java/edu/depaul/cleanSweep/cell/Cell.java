@@ -1,5 +1,7 @@
 package edu.depaul.cleanSweep.cell;
 
+import edu.depaul.cleanSweep.floorPlan.TileType;
+
 public class Cell {
 
 	public SideType sideN;
@@ -7,10 +9,10 @@ public class Cell {
 	public SideType sideW;
 	public SideType sideE;
 	
-	private SurfaceType surface;
+	private TileType surface;
 	private int dirtAmount;
 
-	public Cell(Integer dirtAmount, SurfaceType surfaceType){
+	public Cell(Integer dirtAmount, TileType surfaceType){
 		this.dirtAmount = dirtAmount;
 		this.surface = surfaceType;
 	}
@@ -19,7 +21,7 @@ public class Cell {
 		return dirtAmount;
 	}
 
-	public SurfaceType getSurface() {
+	public TileType getSurface() {
 		return surface;
 	}
 
