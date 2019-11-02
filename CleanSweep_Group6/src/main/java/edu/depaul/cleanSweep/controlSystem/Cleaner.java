@@ -32,6 +32,8 @@ public class Cleaner {
 
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
+	private CustomLinkedList currentMap = new CustomLinkedList();
+
 	public Cleaner(){
 
 	}
@@ -44,6 +46,7 @@ public class Cleaner {
 	
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
+		currentMap.insert(n._x, n._y);
 		//cleanerHistory.add(copyTile(this.currNode));
 	}
 
@@ -67,29 +70,34 @@ public class Cleaner {
 				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.currNode = currNode.north;
 					//cleanerHistory.add(copyTile(this.currNode));
+					this.currentMap.insert(copyFloorTile(this.currNode));
 					flag = true;
-					return true;
 				}
 				break;
 			case 'S':
 				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.currNode = currNode.south;
-					return true;
+					this.currentMap.insert(copyFloorTile(this.currNode));
+					flag=true;
 				}
 				break;
 			case 'W':
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.currNode = currNode.west;
+					this.currentMap.insert(copyFloorTile(this.currNode));
+					flag = true;
 				}
 				break;
 			case 'E':
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.currNode = currNode.east;
+					this.currentMap.insert(copyFloorTile(this.currNode));
+					flag = true;
 				}
 
 				break;
 		}
-		System.out.println(printCoordinate());
+		//System.out.println(printCoordinate());
 		return flag;
 		//change current battery level
 	}
@@ -230,5 +238,13 @@ public class Cleaner {
 
 	public char getHeadingTowards() {
 		return headingTowards;
+	}
+
+	public CustomLinkedList getCurrentMap(){ return currentMap; }
+
+	private FloorTile copyFloorTile(FloorTile tile){
+		var temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
+		temp.setChargeStation(tile.getChargeStation());
+		return temp;
 	}
 }

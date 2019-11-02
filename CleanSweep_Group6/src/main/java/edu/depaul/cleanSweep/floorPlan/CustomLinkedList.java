@@ -91,8 +91,13 @@ public class CustomLinkedList {
 		// Create a new node with given data 
 		FloorTile new_node = new FloorTile(y, x); 
 		insertIntoList(new_node);
-	} 
-	
+	}
+	public void insert(FloorTile new_node)
+	{
+		// Create a new node with given data
+		insertIntoList(new_node);
+	}
+
 	public FloorTile getHead() {
 		return this.head;
 	}
@@ -235,5 +240,15 @@ public class CustomLinkedList {
 		new_node.setChargeStation(chargingStation);
 		new_node.setAccessable(accessible);
 		insertIntoList(new_node);
-	} 
+	}
+
+	public void insertTile(FloorTile node)
+	{
+		//TileType type = TileType.fromInteger(floortype);
+		// Create a new node with given data
+		FloorTile new_node = new FloorTile(node._y, node._x, node.unitsOfDirt, node.surfaceType);
+		new_node.setChargeStation(node.chargingStation);
+		new_node.setAccessable(node.accessable);
+		insertIntoList(new_node);
+	}
 }

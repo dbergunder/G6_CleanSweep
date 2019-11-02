@@ -127,8 +127,7 @@ public class FloorTile implements Serializable {
 		System.out.println("isClean " + isClean + " isChargingStation " + chargingStation);
 		System.out.println(" Units of Dirt " + unitsOfDirt + " surfaceType " + surfaceType);
 	}
-	
-	
+
 	public int get_x() {
 		return _x;
 	}

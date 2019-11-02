@@ -165,11 +165,6 @@ class CleanerTest {
 		assertEquals(1, cleaner.getCurrNode().get_y());
 		cleaner.printCoordinate();
 	}
-	
-	
-	
-	
-	
 
 	@Test
 	void CleanerHistory_AccuratelyReportsHistory() throws IOException, SAXException, ParserConfigurationException {
@@ -204,7 +199,40 @@ class CleanerTest {
         assertEquals(3, cleaner.getCleanerHistory().size());
     }
 
+	@Test
+	void Test() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
+
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(
+				new File("files/SamplePlanWithAttributes.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+		cleaner.changeHeading('S');
+
+		cleaner.moveAhead();
+		cleaner.moveAhead();
+
+		cleaner.getCurrentMap().printList();
+
+		System.out.println("---------------\n\n");
+
+		cleaner.changeHeading('E');
+		cleaner.moveAhead();
+		cleaner.moveAhead();
+
+		cleaner.getCurrentMap().printList();
+
+		System.out.println("---------------\n\n");
+		floorPlan.printList();
+	}
+
+
     private FloorTile getFloorTile(Cleaner cleaner, int index){
 	    return (FloorTile) cleaner.getCleanerHistory().toArray()[index];
     }
+
+
 }
