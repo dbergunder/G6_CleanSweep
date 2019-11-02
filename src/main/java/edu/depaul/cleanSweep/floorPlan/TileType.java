@@ -1,23 +1,31 @@
 package edu.depaul.cleanSweep.floorPlan;
 
+import java.util.HashMap;
+
 public enum TileType {
-		BARE_FLOOR,
-		LOW_PILE,
-		HIGH_PILE;
-		
-		public static TileType fromInteger(int x) {
-		    
-			switch(x) {
-			
-		    case 1:
-		        return TileType.BARE_FLOOR;
-		    case 2:
-		        return TileType.LOW_PILE;
-		    case 3:
-		    	return TileType.HIGH_PILE;
-			}
-		    return null;
-		}
+	BARE(1), LOWPILE(2), HIGHPILE(3);
+
+	//abbr indicates how many units of charge this surface will consume.
+	private int value;
+    private static HashMap<Object, Object> map = new HashMap<>();
+	
+	private TileType(int abb) {
+		value = abb;
+	}
+
+    static {
+        for (TileType tileType : TileType.values()) {
+            map.put(tileType.value, tileType);
+        }
+    }
+	 
+	public int getValue() {
+		return value;
+	}
+
+    public static TileType valueOf(int tileType) {
+        return (TileType) map.get(tileType);
+    }
 }
 
 

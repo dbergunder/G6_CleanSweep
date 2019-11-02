@@ -234,7 +234,7 @@ public class CustomLinkedList {
 	
 	public void insertTile(int y, int x, int dirtAmount, boolean accessible, boolean chargingStation, int floortype) 
 	{ 
-		TileType type = TileType.fromInteger(floortype);
+		TileType type = TileType.valueOf(floortype);
 		// Create a new node with given data 
 		FloorTile new_node = new FloorTile(y, x, dirtAmount, type);
 		new_node.setChargeStation(chargingStation);
