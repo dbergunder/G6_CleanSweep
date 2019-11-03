@@ -3,6 +3,7 @@ package edu.depaul.cleanSweep.floorPlan;
 import java.io.File;
 import java.io.IOException;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,12 +14,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
+
 public class CustomLinkedList {
 	private FloorTile head; // head of list 
 	private FloorTile tail; // tail of list
 	private FloorTile currRowHead; // place saver for the current row's head node
 	private FloorTile tmpNodeHolder; // place saver for node connections 
 
+	private ArrayList<FloorTile> chargingStationList = new ArrayList<FloorTile>();
+	
 	// constructor
 	public CustomLinkedList() {
 		this.head = null;
@@ -240,7 +245,19 @@ public class CustomLinkedList {
 		FloorTile new_node = new FloorTile(y, x, dirtAmount, type);
 		new_node.setChargeStation(chargingStation);
 		new_node.setAccessable(accessible);
+		if(chargingStation) {
+			chargingStationList.add(new_node);
+		}
 		insertIntoList(new_node);
+		
+	} 
+	
+	public ArrayList<FloorTile> getChargingList(){
+		return chargingStationList;
+	}
+	
+	
+	
 	}
 
 	public void insertTile(FloorTile node)
