@@ -39,7 +39,8 @@ public class Cleaner {
 	}
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
-	private CustomLinkedList currentMap = new CustomLinkedList();
+	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
+	private FloorTile[][] currentMap = new FloorTile[1000][1000];
 
 	public Cleaner(double battery, int dirtCapacity, FloorTile node) {
 		currBattery = battery;
@@ -49,7 +50,7 @@ public class Cleaner {
 	
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
-		currentMap.insert(n._x, n._y);
+		currentMap[n._x][n._y] = copyFloorTile(n);
 		cleanerHistory.add(copyFloorTile(currNode));
 	}
 	
@@ -74,7 +75,7 @@ public class Cleaner {
 					this.prevNode = currNode;
 					this.currNode = currNode.north;
 					cleanerHistory.add(copyFloorTile(this.currNode));
-					currentMap.insert(copyFloorTile(this.currNode));
+					currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 					flag = true;
 				}
 				break;
@@ -83,7 +84,7 @@ public class Cleaner {
 					this.prevNode = currNode;
 					this.currNode = currNode.south;
 					cleanerHistory.add(copyFloorTile(this.currNode));
-					currentMap.insert(copyFloorTile(this.currNode));
+					currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 					flag=true;
 				}
 				break;
@@ -92,7 +93,7 @@ public class Cleaner {
 					this.prevNode = currNode;
 					this.currNode = currNode.west;
 					cleanerHistory.add(copyFloorTile(this.currNode));
-					currentMap.insert(copyFloorTile(this.currNode));
+					currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 					flag = true;
 				}
 				break;
@@ -101,7 +102,7 @@ public class Cleaner {
 					this.prevNode = currNode;
 					this.currNode = currNode.east;
 					cleanerHistory.add(copyFloorTile(this.currNode));
-					currentMap.insert(copyFloorTile(this.currNode));
+					currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 					flag = true;
 				}
 
@@ -256,7 +257,7 @@ public class Cleaner {
 		return cleanerHistory;
 	}
 
-	public CustomLinkedList getCurrentMap(){ return currentMap; }
+	public FloorTile[][] getCurrentMap(){ return currentMap; }
 
 	private FloorTile copyFloorTile(FloorTile tile){
 		var temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());

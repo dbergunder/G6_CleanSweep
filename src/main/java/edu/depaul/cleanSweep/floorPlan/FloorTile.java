@@ -150,6 +150,11 @@ public class FloorTile implements Serializable {
 		unitsOfDirt = unitsOfDirt -1;
 		return;
 	}
+
+	@Override
+	public String toString(){
+		return String.format("Node: y:%d x:%d ", _y, _x);
+	}
 	
 	
 }

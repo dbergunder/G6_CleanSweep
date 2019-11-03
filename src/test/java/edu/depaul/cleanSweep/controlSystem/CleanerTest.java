@@ -8,6 +8,7 @@ import edu.depaul.cleanSweep.cell.Cell;
 import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import edu.depaul.cleanSweep.floorPlan.FloorTile;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -212,26 +213,29 @@ class CleanerTest {
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 
 		cleaner.changeHeading('S');
-
-		cleaner.moveAhead();
-		cleaner.moveAhead();
-		cleaner.moveAhead();
 		cleaner.moveAhead();
 
-		cleaner.getCurrentMap().printList();
+		// check that the cleaner has a history of being at x: 0 y: 1
+		assertNotNull(cleaner.getCurrentMap()[0][1]);
+		cleaner.moveAhead();
 
-		System.out.println("----Changing heading-----------\n\n");
+		// check that the cleaner has a history of being at x: 0 y: 2
+		assertNotNull(cleaner.getCurrentMap()[0][2]);
 
 		cleaner.changeHeading('E');
 		cleaner.moveAhead();
 		cleaner.moveAhead();
 
-		cleaner.getCurrentMap().printList();
+		// check that the cleaner has a history of being at x: 2 y: 2
+		assertNotNull(cleaner.getCurrentMap()[2][2]);
 
-		System.out.println("--------This is what the floor looks like-------\n\n");
-		floorPlan.printList();
+		cleaner.changeHeading('N');
+		cleaner.moveAhead();
+		cleaner.moveAhead();
+
+		// check that the cleaner has a history of being at x: 2 y: 0
+		assertNotNull(cleaner.getCurrentMap()[2][0]);
 	}
-
 
     private FloorTile getFloorTile(Cleaner cleaner, int index){
 	    return (FloorTile) cleaner.getCleanerHistory().toArray()[index];
@@ -246,6 +250,8 @@ class CleanerTest {
 		test.insertTile(0, 1, 1, true,  false,  2);
 		test.insertTile(1, 0, 1, true,  false,  3);
 		test.insertTile(1, 1, 1, true,  false,  2);
+
+		test.printList();
 		
 		Cleaner cleaner = new Cleaner();
 		
