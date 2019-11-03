@@ -255,10 +255,6 @@ public class CustomLinkedList {
 	public ArrayList<FloorTile> getChargingList(){
 		return chargingStationList;
 	}
-	
-	
-	
-	}
 
 	public void insertTile(FloorTile node)
 	{

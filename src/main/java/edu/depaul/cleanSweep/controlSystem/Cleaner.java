@@ -43,7 +43,7 @@ public class Cleaner {
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
 	}
-	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+		private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
 	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
@@ -367,4 +367,16 @@ public class Cleaner {
 		return currBattery;
 	}
 
+	public ArrayList<FloorTile> getCleanerHistory() {
+		return cleanerHistory;
+	}
+
+	public FloorTile[][] getCurrentMap() {
+		return currentMap;
+	}
+
+	private FloorTile copyFloorTile(FloorTile tile) {
+		var temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
+		return temp;
+	}
 }

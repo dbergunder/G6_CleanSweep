@@ -22,7 +22,7 @@ import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class CleanerTest {
+class CleanersTest {
 
 	private static final int MAX_DIRT_CAPACITY = 50;
 
@@ -204,7 +204,7 @@ class CleanerTest {
     }
 
 	@Test
-	void CleanerInterioMap_AccuratlyKeepsTrackofVisitedLocations() throws IOException, SAXException, ParserConfigurationException {
+	void CleanerInteriorMap_AccuratlyKeepsTrackofVisitedLocations() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
 
 		var floorPlan = new CustomLinkedList();
@@ -544,6 +544,17 @@ class CleanerTest {
 		assertEquals(test.returnNode(4, 3), cleaner.getCurrNode());
 	}
 
+	@Test
+	void CleanerObstacleTraversal_MovesAroundObjects() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
 
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(
+				new File("files/SamplePlanWithAttributes.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+	}
 
 }
