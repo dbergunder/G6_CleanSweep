@@ -104,7 +104,7 @@ class CleanerTest {
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 		System.out.println("origin location\n" + cleaner.printCoordinate());
 		cleaner.changeHeading('E');
-		assertEquals('E', cleaner.getHeadingTowards());
+		assertEquals('E', cleaner.getHeading());
 		System.out.println("make a move");
 		cleaner.moveAhead();
 		assertEquals(1, cleaner.getCurrNode().get_x());
@@ -130,7 +130,7 @@ class CleanerTest {
 		//move ahead
 		cleaner.setCurrNode(test.getHead());
 		cleaner.changeHeading('E');
-		assertEquals('E', cleaner.getHeadingTowards());
+		assertEquals('E', cleaner.getHeading());
 		System.out.println("cleaner is towards east");
 		System.out.println("current location\n" + cleaner.printCoordinate());
 		assert(cleaner.getCurrNode()._x == 0);
@@ -158,7 +158,7 @@ class CleanerTest {
 		
 		//move right
 		cleaner.changeHeading('N');
-		assertEquals('N', cleaner.getHeadingTowards());
+		assertEquals('N', cleaner.getHeading());
 		System.out.println("\ncleaner is towards north");
 		System.out.println("turn right");
 		cleaner.moveRight();
@@ -201,7 +201,7 @@ class CleanerTest {
     }
 
 	@Test
-	void Test() throws IOException, SAXException, ParserConfigurationException {
+	void CleanerInterioMap_AccuratlyKeepsTrackofVisitedLocations() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
 
 		var floorPlan = new CustomLinkedList();
@@ -215,10 +215,12 @@ class CleanerTest {
 
 		cleaner.moveAhead();
 		cleaner.moveAhead();
+		cleaner.moveAhead();
+		cleaner.moveAhead();
 
 		cleaner.getCurrentMap().printList();
 
-		System.out.println("---------------\n\n");
+		System.out.println("----Changing heading-----------\n\n");
 
 		cleaner.changeHeading('E');
 		cleaner.moveAhead();
@@ -226,7 +228,7 @@ class CleanerTest {
 
 		cleaner.getCurrentMap().printList();
 
-		System.out.println("---------------\n\n");
+		System.out.println("--------This is what the floor looks like-------\n\n");
 		floorPlan.printList();
 	}
 
@@ -235,8 +237,6 @@ class CleanerTest {
 	    return (FloorTile) cleaner.getCleanerHistory().toArray()[index];
     }
 
-
-	
 	@Test
 	void CleanerMovementOnAllFloorResultsInBatteryConsumptionTest() throws IOException {
 		System.out.println("\nCleanerMovementOnAllFloorResultsInBatteryConsumptionTest");

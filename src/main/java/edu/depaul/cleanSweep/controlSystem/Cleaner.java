@@ -36,13 +36,10 @@ public class Cleaner {
 		pcl = PowerConsumptionLog.getInstance();
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
+	}
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
 
 	private CustomLinkedList currentMap = new CustomLinkedList();
-
-	public Cleaner(){
-
-	}
 
 	public Cleaner(double battery, int dirtCapacity, FloorTile node) {
 		currBattery = battery;
@@ -53,14 +50,12 @@ public class Cleaner {
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
 		currentMap.insert(n._x, n._y);
-		//cleanerHistory.add(copyTile(this.currNode));
+		cleanerHistory.add(copyFloorTile(currNode));
 	}
-
 	
 	public FloorTile getCurrNode() {
 		return currNode != null ? currNode : new FloorTile(0, 0);
 	}
-
 
 	/*
 	 * According to the current heading direction, first check if the corresponding side is blocked,
@@ -78,8 +73,8 @@ public class Cleaner {
 				if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 					this.prevNode = currNode;
 					this.currNode = currNode.north;
-					//cleanerHistory.add(copyTile(this.currNode));
-					this.currentMap.insert(copyFloorTile(this.currNode));
+					cleanerHistory.add(copyFloorTile(this.currNode));
+					currentMap.insert(copyFloorTile(this.currNode));
 					flag = true;
 				}
 				break;
@@ -87,7 +82,8 @@ public class Cleaner {
 				if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 					this.prevNode = currNode;
 					this.currNode = currNode.south;
-					this.currentMap.insert(copyFloorTile(this.currNode));
+					cleanerHistory.add(copyFloorTile(this.currNode));
+					currentMap.insert(copyFloorTile(this.currNode));
 					flag=true;
 				}
 				break;
@@ -95,7 +91,8 @@ public class Cleaner {
 				if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 					this.prevNode = currNode;
 					this.currNode = currNode.west;
-					this.currentMap.insert(copyFloorTile(this.currNode));
+					cleanerHistory.add(copyFloorTile(this.currNode));
+					currentMap.insert(copyFloorTile(this.currNode));
 					flag = true;
 				}
 				break;
@@ -103,7 +100,8 @@ public class Cleaner {
 				if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 					this.prevNode = currNode;
 					this.currNode = currNode.east;
-					this.currentMap.insert(copyFloorTile(this.currNode));
+					cleanerHistory.add(copyFloorTile(this.currNode));
+					currentMap.insert(copyFloorTile(this.currNode));
 					flag = true;
 				}
 
@@ -258,10 +256,6 @@ public class Cleaner {
 		return cleanerHistory;
 	}
 
-	public char getHeadingTowards() {
-		return headingTowards;
-	}
-
 	public CustomLinkedList getCurrentMap(){ return currentMap; }
 
 	private FloorTile copyFloorTile(FloorTile tile){
@@ -275,5 +269,4 @@ public class Cleaner {
 	public double getBatteryPower() {
 		return currBattery;
 	}
-	
 }
