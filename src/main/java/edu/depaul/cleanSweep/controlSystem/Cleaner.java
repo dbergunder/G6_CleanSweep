@@ -156,6 +156,7 @@ public class Cleaner {
 			if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.north;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 				flag = true;
 			}
 			break;
@@ -163,6 +164,7 @@ public class Cleaner {
 			if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.south;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 				flag = true;
 			}
 			break;
@@ -170,6 +172,7 @@ public class Cleaner {
 			if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.west;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 				flag = true;
 			}
 			break;
@@ -177,6 +180,7 @@ public class Cleaner {
 			if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.east;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
 				flag = true;
 			}
 			break;
