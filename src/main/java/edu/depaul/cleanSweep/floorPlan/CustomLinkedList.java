@@ -295,8 +295,5 @@ public class CustomLinkedList {
 			west_node.east = node;
 			node.west = west_node;
 		}
-
-
 	}
-
 }
