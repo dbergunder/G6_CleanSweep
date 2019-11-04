@@ -1,3 +1,5 @@
 Event      | New (Y,X)  | Power Started   | Power Consumed  | Power Final    
 
 Movement   | (1,0)      | 250.00          | 1.00            | 249.00         
+Movement   | (2,0)      | 249.00          | 1.00            | 248.00         
+Movement   | (2,0)      | 248.00          | 1.00            | 247.00         

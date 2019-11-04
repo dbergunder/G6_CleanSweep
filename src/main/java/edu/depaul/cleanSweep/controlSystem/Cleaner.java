@@ -38,15 +38,16 @@ public class Cleaner {
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
+	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+
+	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
+	private FloorTile[][] currentMap = new FloorTile[1000][1000];
+
 	public Cleaner() throws IOException{
 		pcl = PowerConsumptionLog.getInstance();
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
 	}
-		private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
-
-	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
-	private FloorTile[][] currentMap = new FloorTile[1000][1000];
 
 	public Cleaner(double battery, int dirtCapacity, FloorTile node) {
 		currBattery = battery;
@@ -65,7 +66,6 @@ public class Cleaner {
 	public double getCurrBattery() {
 		return currBattery;
 	}
-
 
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
@@ -157,6 +157,7 @@ public class Cleaner {
 				this.prevNode = currNode;
 				this.currNode = currNode.north;
 				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -165,6 +166,7 @@ public class Cleaner {
 				this.prevNode = currNode;
 				this.currNode = currNode.south;
 				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -173,6 +175,7 @@ public class Cleaner {
 				this.prevNode = currNode;
 				this.currNode = currNode.west;
 				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -181,6 +184,7 @@ public class Cleaner {
 				this.prevNode = currNode;
 				this.currNode = currNode.east;
 				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
