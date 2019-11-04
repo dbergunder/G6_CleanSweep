@@ -355,6 +355,7 @@ public class Cleaner {
 	public String getCleanerStatus () {
 		return currStatus;
 	}
+
 	public Integer getCurrentBagSize(){
 		return vacuumBag.stream().mapToInt(record -> {
 			return record.getValue0();

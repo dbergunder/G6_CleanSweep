@@ -1,10 +1,7 @@
-CleanSweep_Group6/bin/
-CleanSweep_Group6/target/
-CleanSweep_Group6/.classpath
-CleanSweep_Group6/.gitignore
-CleanSweep_Group6/.idea/
-CleanSweep_Group6/.project
-CleanSweep_Group6/.settings/
+/bin/
+.classpath
+.project
+.settings/
 *.iml
 /target/
 .idea/
