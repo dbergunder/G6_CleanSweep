@@ -174,7 +174,7 @@ class CleanersTest {
 	void CleanerHistory_AccuratelyReportsHistory() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
 
-		var floorPlan = new CustomLinkedList();
+		CustomLinkedList floorPlan = new CustomLinkedList();
 
 		floorPlan.convertXMLToCustomLinkedList(
 		        new File("files/SamplePlan.xml"));
@@ -207,7 +207,7 @@ class CleanersTest {
 	void CleanerInteriorMap_AccuratlyKeepsTrackofVisitedLocations() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
 
-		var floorPlan = new CustomLinkedList();
+		CustomLinkedList floorPlan = new CustomLinkedList();
 
 		floorPlan.convertXMLToCustomLinkedList(
 				new File("files/SamplePlanWithAttributes.xml"));
@@ -548,7 +548,7 @@ class CleanersTest {
 	void CleanerObstacleTraversal_MovesAroundObjects() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
 
-		var floorPlan = new CustomLinkedList();
+		CustomLinkedList floorPlan = new CustomLinkedList();
 
 		floorPlan.convertXMLToCustomLinkedList(
 				new File("files/SamplePlanWithAttributes.xml"));

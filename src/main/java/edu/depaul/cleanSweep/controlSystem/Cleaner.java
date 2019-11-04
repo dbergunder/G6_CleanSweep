@@ -384,7 +384,7 @@ public class Cleaner {
 	}
 
 	private FloorTile copyFloorTile(FloorTile tile) {
-		var temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
+		FloorTile temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
 		return temp;
 	}
 }
