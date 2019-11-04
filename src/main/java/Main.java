@@ -100,7 +100,7 @@ public class Main{
 		//Started moving around floor, should run into obstacles.
 		Cleaner myCleaner = new Cleaner();
 		createFloor();
-		myCleaner.setCurrNode(myFloor.returnNode(1, 1)); 
+		myCleaner.setCurrNode(myFloor.returnNode(1, 1));
 		for (int i = 0; i < 10;i++)
 		{
 			//TODO update when navigation is done

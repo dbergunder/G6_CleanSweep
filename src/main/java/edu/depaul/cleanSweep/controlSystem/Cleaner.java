@@ -1,10 +1,13 @@
 package edu.depaul.cleanSweep.controlSystem;
 
+import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.diagnostics.PowerConsumptionLog;
 import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,6 +38,11 @@ public class Cleaner {
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
+	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+
+	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
+	private FloorTile[][] currentMap = new FloorTile[1000][1000];
+
 	public Cleaner() throws IOException{
 		pcl = PowerConsumptionLog.getInstance();
 		currBattery = MAX_BATTERY_POWER;
@@ -59,14 +67,15 @@ public class Cleaner {
 		return currBattery;
 	}
 
-
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
+		currentMap[n._x][n._y] = copyFloorTile(n);
+		cleanerHistory.add(copyFloorTile(currNode));
 	}
 
 
 	public FloorTile getCurrNode() {
-		return currNode;
+		return currNode != null ? currNode : new FloorTile(0, 0);
 	}
 
 	//only move, no clean.
@@ -147,6 +156,8 @@ public class Cleaner {
 			if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.north;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -154,6 +165,8 @@ public class Cleaner {
 			if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.south;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -161,6 +174,8 @@ public class Cleaner {
 			if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.west;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -168,6 +183,8 @@ public class Cleaner {
 			if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.east;
+				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -358,4 +375,16 @@ public class Cleaner {
 		return currBattery;
 	}
 
+	public ArrayList<FloorTile> getCleanerHistory() {
+		return cleanerHistory;
+	}
+
+	public FloorTile[][] getCurrentMap() {
+		return currentMap;
+	}
+
+	private FloorTile copyFloorTile(FloorTile tile) {
+		var temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
+		return temp;
+	}
 }

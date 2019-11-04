@@ -4,14 +4,25 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.depaul.cleanSweep.controlSystem.*;
 import edu.depaul.cleanSweep.floorPlan.*;
 
+import edu.depaul.cleanSweep.cell.Cell;
+import edu.depaul.cleanSweep.cell.SurfaceType;
+import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
+import edu.depaul.cleanSweep.floorPlan.FloorTile;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class CleanerTest {
+class CleanersTest {
 
 	private static final int MAX_DIRT_CAPACITY = 50;
 
@@ -158,6 +169,79 @@ class CleanerTest {
 		assertEquals(1, cleaner.getCurrNode().get_y());
 		cleaner.printCoordinate();
 	}
+
+	@Test
+	void CleanerHistory_AccuratelyReportsHistory() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
+
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(
+		        new File("files/SamplePlan.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+        cleaner.changeHeading('S');
+
+        // Assert cleaner is at the origin
+		assertEquals(0, cleaner.getCurrNode()._x);
+        assertEquals(0, cleaner.getCurrNode()._y);
+
+        cleaner.moveAhead();
+
+        // Assert cleaner x hasnt change, but the y has
+        assertEquals(0, getFloorTile(cleaner, 1)._x);
+        assertEquals(1, getFloorTile(cleaner, 1)._y);
+
+        cleaner.moveAhead();
+
+        assertEquals(0, getFloorTile(cleaner, 2)._x);
+        assertEquals(2, getFloorTile(cleaner, 2)._y);
+
+        cleaner.moveAhead();
+
+        assertEquals(3, cleaner.getCleanerHistory().size());
+    }
+
+	@Test
+	void CleanerInteriorMap_AccuratlyKeepsTrackofVisitedLocations() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
+
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(
+				new File("files/SamplePlanWithAttributes.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+		cleaner.changeHeading('S');
+		cleaner.moveAhead();
+
+		// check that the cleaner has a history of being at x: 0 y: 1
+		assertNotNull(cleaner.getCurrentMap()[0][1]);
+		cleaner.moveAhead();
+
+		// check that the cleaner has a history of being at x: 0 y: 2
+		assertNotNull(cleaner.getCurrentMap()[0][2]);
+
+		cleaner.changeHeading('E');
+		cleaner.moveAhead();
+		cleaner.moveAhead();
+
+		// check that the cleaner has a history of being at x: 2 y: 2
+		assertNotNull(cleaner.getCurrentMap()[2][2]);
+
+		cleaner.changeHeading('N');
+		cleaner.moveAhead();
+		cleaner.moveAhead();
+
+		// check that the cleaner has a history of being at x: 2 y: 0
+		assertNotNull(cleaner.getCurrentMap()[2][0]);
+	}
+
+    private FloorTile getFloorTile(Cleaner cleaner, int index){
+	    return (FloorTile) cleaner.getCleanerHistory().toArray()[index];
+    }
 
 	@Test
 	void CleanerMovementOnAllFloorResultsInBatteryConsumptionTest() throws IOException {
@@ -460,6 +544,17 @@ class CleanerTest {
 		assertEquals(test.returnNode(4, 3), cleaner.getCurrNode());
 	}
 
+	@Test
+	void CleanerObstacleTraversal_MovesAroundObjects() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
 
+		var floorPlan = new CustomLinkedList();
+
+		floorPlan.convertXMLToCustomLinkedList(
+				new File("files/SamplePlanWithAttributes.xml"));
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+
+	}
 
 }

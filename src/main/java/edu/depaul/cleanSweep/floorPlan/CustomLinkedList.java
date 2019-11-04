@@ -31,7 +31,8 @@ public class CustomLinkedList {
 		this.currRowHead = null;
 		this.tmpNodeHolder = null;
 	}
-	
+
+	// THIS FUNCTION CAN NOT BE USED TO INSERT A SINGLE ELEMENT INTO THE LIST
 	public void insertIntoList(FloorTile new_node)
 	{
 		// if the custom linked list is empty then make the new node as head 
@@ -96,8 +97,13 @@ public class CustomLinkedList {
 		// Create a new node with given data 
 		FloorTile new_node = new FloorTile(y, x); 
 		insertIntoList(new_node);
-	} 
-	
+	}
+	public void insert(FloorTile new_node)
+	{
+		// Create a new node with given data
+		insertIntoList(new_node);
+	}
+
 	public FloorTile getHead() {
 		return this.head;
 	}
@@ -196,8 +202,8 @@ public class CustomLinkedList {
 			}
 		}
 		
-		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
-		System.out.println(); // used as a separator
+		//this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist
+		//System.out.println(); // used as a separator
 	}
 	public void createFloorFromXML(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -249,7 +255,45 @@ public class CustomLinkedList {
 	public ArrayList<FloorTile> getChargingList(){
 		return chargingStationList;
 	}
-	
-	
-	
+
+	public void insertTile(FloorTile node)
+	{
+		//TileType type = TileType.fromInteger(floortype);
+		// Create a new node with given data
+		FloorTile new_node = new FloorTile(node._y, node._x, node.unitsOfDirt, node.surfaceType);
+		new_node.setChargeStation(node.chargingStation);
+		new_node.setAccessable(node.accessable);
+		insertIntoList(new_node);
+	}
+
+	// This function inserts a node into the map based on it's x and y coordinates.
+	public void insertOneTile(FloorTile node){
+
+		// Search for possible "parents"
+		// see if the map contains nodes that could be north, south, east, or west of this node
+		FloorTile north_node = returnNode(node._x, node._y-1);
+		FloorTile south_node = returnNode(node._x, node._y+1);
+		FloorTile east_node = returnNode(node._x+1, node._y);
+		FloorTile west_node = returnNode(node._x-1, node._y);
+
+		if(north_node != null){
+			north_node.south = node;
+			node.north = north_node;
+		}
+
+		if(south_node != null){
+			south_node.north = node;
+			node.south = south_node;
+		}
+
+		if(east_node != null){
+			east_node.west = node;
+			node.east = east_node;
+		}
+
+		if(west_node != null){
+			west_node.east = node;
+			node.west = west_node;
+		}
+	}
 }
