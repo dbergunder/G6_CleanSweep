@@ -7,11 +7,9 @@ import edu.depaul.cleanSweep.floorPlan.*;
 import org.javatuples.Pair;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Cleaner {
 
@@ -39,6 +37,10 @@ public class Cleaner {
 	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+
+	private Stack<FloorTile> destinationStack = new Stack<FloorTile>();
+
+	private char z_flag = 'T';
 
 	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
@@ -95,6 +97,11 @@ public class Cleaner {
 			this.changeHeading('W');
 		}
 		while(this.getCurrNode().get_x() != bx) {
+			moveRecursivelyToDestination(ch, bx, by);
+			if(haveBeenAtLocation(getNodeAhead()._x, getNodeAhead()._y)){
+				z_flag = 'Z';
+				return new int[] {'Z', ax, ay};
+			}
 			moveAhead();
 		}
 
@@ -105,14 +112,115 @@ public class Cleaner {
 			this.changeHeading('N');
 		}
 		while(this.getCurrNode().get_y() != by) {
+			moveRecursivelyToDestination(ch, bx, by);
+			if(haveBeenAtLocation(getNodeAhead()._x, getNodeAhead()._y)){
+				z_flag = 'Z';
+				return new int[] {'Z', ax, ay};
+			}
 			moveAhead();
 		}
+
+		// Didnt make it! try again!
+		if(!(currNode._x == bx && currNode._y == by)){
+			move2ALocation(new int[]{ch, bx, by});
+		}
+
 		this.changeHeading((char) dest[0]);
 		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
 
+	private boolean haveBeenAtLocation(int x, int y){
+		for(FloorTile tile: cleanerHistory){
+			if(tile._x == x && tile._y == y)
+				return true;
+		}
+		return false;
+	}
+	private int[] moveRecursivelyToDestination(char ch, int bx, int by) {
+		//node in front of cleaner is not accessible
+		if (!getNodeAhead().getAccessable()) {
+			//this was my target node, quit!
+			if (getNodeAhead()._x == bx && getNodeAhead()._y == by) {
+				return new int[]{ch, bx, by};
+			}
+			//wasnt the target node, move around
+			else {
+				FloorTile leftNode = getLeftNode();
+				FloorTile rightNode = getRightNode();
 
+				if (rightNode != null) {
+					destinationStack.push(new FloorTile(by, bx));
+					move2ALocation(new int[]{ch, rightNode._x, rightNode._y});
+					if (!destinationStack.isEmpty()) {
+						FloorTile newDestination = destinationStack.pop();
+
+						// Check if Z flag was set. That means that we've been to a location too many times, gotta try other ndoe
+						if(z_flag == 'T'){
+							return new int[]{ch, currNode._x, currNode._y};
+						}
+					}
+				}
+				if (leftNode != null) {
+					destinationStack.push(new FloorTile(by, bx));
+					move2ALocation(new int[]{ch, leftNode._x, leftNode._y});
+					if (!destinationStack.isEmpty()) {
+						FloorTile newDestination = destinationStack.pop();
+						if(z_flag == 'T'){
+							return new int[]{ch, currNode._x, currNode._y};
+						}
+					}
+				}
+
+			}
+		}
+		return new int[]{ch, bx, by};
+	}
+
+	FloorTile getNodeAhead() {
+		switch (headingTowards){
+			case 'N':
+				return currNode.north;
+			case 'S':
+				return currNode.south;
+			case 'E':
+				return currNode.east;
+			case 'W':
+				return currNode.west;
+			default:
+				return null;
+		}
+	}
+
+	FloorTile getLeftNode(){
+        switch (headingTowards){
+            case 'N':
+                return currNode.west;
+            case 'S':
+                return currNode.east;
+            case 'E':
+                return currNode.north;
+            case 'W':
+                return currNode.south;
+            default:
+                return null;
+        }
+    }
+
+	FloorTile getRightNode(){
+		switch (headingTowards){
+			case 'N':
+				return currNode.east;
+			case 'S':
+				return currNode.west;
+			case 'E':
+				return currNode.south;
+			case 'W':
+				return currNode.north;
+			default:
+				return null;
+		}
+	}
 
 
 	public FloorTile getClosestCharging() {

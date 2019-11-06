@@ -545,7 +545,7 @@ class CleanersTest {
 	}
 
 	@Test
-	void CleanerObstacleTraversal_MovesAroundObjects() throws IOException, SAXException, ParserConfigurationException {
+	void CleanerObstacleTraversal_MovesAroundObjects() throws Exception {
 		Cleaner cleaner = new Cleaner();
 
 		CustomLinkedList floorPlan = new CustomLinkedList();
@@ -557,10 +557,10 @@ class CleanersTest {
 
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 
-		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 2, 0});
-		assertEquals(floorPlan.returnNode(2, 0), cleaner.getCurrNode());
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 7, 5});
+		assertEquals(floorPlan.returnNode(7, 5), cleaner.getCurrNode());
 
-		System.out.println(cleaner.getCurrentMap()[2][0]);
+		System.out.println(cleaner.getCurrentMap()[7][5]);
 
 	}
 }
