@@ -553,8 +553,14 @@ class CleanersTest {
 		floorPlan.convertXMLToCustomLinkedList(
 				new File("files/SamplePlanWithAttributes.xml"));
 
+		floorPlan.printSuccintMap();
+
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 
-	}
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 2, 0});
+		assertEquals(floorPlan.returnNode(2, 0), cleaner.getCurrNode());
 
+		System.out.println(cleaner.getCurrentMap()[2][0]);
+
+	}
 }

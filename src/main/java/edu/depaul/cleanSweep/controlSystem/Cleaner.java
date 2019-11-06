@@ -230,9 +230,6 @@ public class Cleaner {
 		}
 	}
 
-
-
-
 	/*
 	 * For moving left, right or back, the heading direction will change correspondingly, and then move forward.
 	 */
