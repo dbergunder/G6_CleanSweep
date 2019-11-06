@@ -264,7 +264,7 @@ public class CustomLinkedList {
 				int dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent()); // get dirt
 				boolean chargingStation =  Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent()); // get chargingStation
 				this.insertTile(y, x, dirt, accessible, chargingStation, type);
-				}
+			}
 		}
 		
 		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist

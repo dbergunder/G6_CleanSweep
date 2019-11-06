@@ -557,7 +557,7 @@ class CleanersTest {
 
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 
-		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 7, 5});
+		cleaner.moveToLocationStack(7, 5);
 		assertEquals(floorPlan.returnNode(7, 5), cleaner.getCurrNode());
 
 		System.out.println(cleaner.getCurrentMap()[7][5]);

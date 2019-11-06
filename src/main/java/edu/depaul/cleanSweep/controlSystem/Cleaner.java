@@ -31,6 +31,8 @@ public class Cleaner {
 
 	private ArrayList<FloorTile> chargingStations = new ArrayList<FloorTile>();
 
+	private char z_flag = 'T';
+
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
 	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
 	// In order to traverse through the history, start at the head, and work downward
@@ -40,7 +42,7 @@ public class Cleaner {
 
 	private Stack<FloorTile> destinationStack = new Stack<FloorTile>();
 
-	private char z_flag = 'T';
+	private Stack<FloorTile> validTilesStack = new Stack<FloorTile>();
 
 	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
@@ -97,11 +99,9 @@ public class Cleaner {
 			this.changeHeading('W');
 		}
 		while(this.getCurrNode().get_x() != bx) {
-			moveRecursivelyToDestination(ch, bx, by);
-			if(haveBeenAtLocation(getNodeAhead()._x, getNodeAhead()._y)){
-				z_flag = 'Z';
-				return new int[] {'Z', ax, ay};
-			}
+//			if(haveBeenAtLocation(bx, by)){
+//				return new int[] {'Z', 0, 0};
+//			}
 			moveAhead();
 		}
 
@@ -112,17 +112,10 @@ public class Cleaner {
 			this.changeHeading('N');
 		}
 		while(this.getCurrNode().get_y() != by) {
-			moveRecursivelyToDestination(ch, bx, by);
-			if(haveBeenAtLocation(getNodeAhead()._x, getNodeAhead()._y)){
-				z_flag = 'Z';
-				return new int[] {'Z', ax, ay};
-			}
+//			if(haveBeenAtLocation(bx, by)){
+//				return new int[] {'Z', 0, 0};
+//			}
 			moveAhead();
-		}
-
-		// Didnt make it! try again!
-		if(!(currNode._x == bx && currNode._y == by)){
-			move2ALocation(new int[]{ch, bx, by});
 		}
 
 		this.changeHeading((char) dest[0]);
@@ -137,6 +130,34 @@ public class Cleaner {
 		}
 		return false;
 	}
+
+	public void moveToLocationStack(int targetX, int targetY){
+		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
+
+		while(! (currNode._x == targetX && currNode._y == targetY ) ){
+			wrongNodes.add(currNode);
+			addValidNodes(wrongNodes);
+			FloorTile target = validTilesStack.pop();
+
+			currNode = target;
+			System.out.println("Current coordinate is: " + currNode);
+
+		}
+	}
+
+	private void addValidNodes(List<FloorTile> wrongNodes){
+		for (FloorTile neighbor: getNeighboringNodes()) {
+			if(neighbor != null && neighbor.getAccessable() && !wrongNodes.contains(neighbor)){
+				validTilesStack.push(neighbor);
+			}
+		}
+	}
+
+	private List<FloorTile> getNeighboringNodes(){
+		return new ArrayList<FloorTile>(
+				Arrays.asList(new FloorTile[]{currNode.north, currNode.south, currNode.east, currNode.west}));
+	}
+
 	private int[] moveRecursivelyToDestination(char ch, int bx, int by) {
 		//node in front of cleaner is not accessible
 		if (!getNodeAhead().getAccessable()) {
