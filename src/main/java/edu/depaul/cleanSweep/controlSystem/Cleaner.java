@@ -99,9 +99,6 @@ public class Cleaner {
 			this.changeHeading('W');
 		}
 		while(this.getCurrNode().get_x() != bx) {
-//			if(haveBeenAtLocation(bx, by)){
-//				return new int[] {'Z', 0, 0};
-//			}
 			moveAhead();
 		}
 
@@ -112,9 +109,6 @@ public class Cleaner {
 			this.changeHeading('N');
 		}
 		while(this.getCurrNode().get_y() != by) {
-//			if(haveBeenAtLocation(bx, by)){
-//				return new int[] {'Z', 0, 0};
-//			}
 			moveAhead();
 		}
 
@@ -123,30 +117,50 @@ public class Cleaner {
 		return new int[] {ch, ax, ay};
 	}
 
-	private boolean haveBeenAtLocation(int x, int y){
-		for(FloorTile tile: cleanerHistory){
-			if(tile._x == x && tile._y == y)
-				return true;
-		}
-		return false;
-	}
-
-	public void moveToLocationStack(int targetX, int targetY){
+	// In the spirit of "MVP first" I would like to use the move2location method,
+	// but I can't get a good enough algo running rn
+	// So I'm "cheating" and letting the robot "teleport" to a location
+	// it theoretically could have gone to manually
+	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
 
 		while(! (currNode._x == targetX && currNode._y == targetY ) ){
 			wrongNodes.add(currNode);
 			addValidNodes(wrongNodes);
-			FloorTile target = validTilesStack.pop();
+			teleportToNode(validTilesStack.pop());
+		}
+	}
 
-			currNode = target;
-			System.out.println("Current coordinate is: " + currNode);
+	private void teleportToNode(FloorTile node){
+		prevNode = currNode;
+		currNode = node;
 
+		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+		cleanerHistory.add(copyFloorTile(currNode));
+
+		System.out.println("Moving to " + printCoordinate());
+		// get average battery cost, log it, and subtract from battery total
+		double averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
+
+		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		this.currBattery -= averagePowerCost;
+
+		if (this.currNode.getChargeStation()) {
+			this.currBattery = MAX_BATTERY_POWER;
+			System.out.println("************************");
+			System.out.println("Arrive charging station.");
+			System.out.println("************************");
+			System.out.println("........CHARGING........");
+			System.out.println("************************");
+			System.out.println("The battery is full.");
+			System.out.println("************************");
+			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
 		}
 	}
 
 	private void addValidNodes(List<FloorTile> wrongNodes){
-		for (FloorTile neighbor: getNeighboringNodes()) {
+		List<FloorTile> neighboringNodes = getNeighboringNodes();
+		for (FloorTile neighbor: neighboringNodes) {
 			if(neighbor != null && neighbor.getAccessable() && !wrongNodes.contains(neighbor)){
 				validTilesStack.push(neighbor);
 			}
@@ -157,92 +171,6 @@ public class Cleaner {
 		return new ArrayList<FloorTile>(
 				Arrays.asList(new FloorTile[]{currNode.north, currNode.south, currNode.east, currNode.west}));
 	}
-
-	private int[] moveRecursivelyToDestination(char ch, int bx, int by) {
-		//node in front of cleaner is not accessible
-		if (!getNodeAhead().getAccessable()) {
-			//this was my target node, quit!
-			if (getNodeAhead()._x == bx && getNodeAhead()._y == by) {
-				return new int[]{ch, bx, by};
-			}
-			//wasnt the target node, move around
-			else {
-				FloorTile leftNode = getLeftNode();
-				FloorTile rightNode = getRightNode();
-
-				if (rightNode != null) {
-					destinationStack.push(new FloorTile(by, bx));
-					move2ALocation(new int[]{ch, rightNode._x, rightNode._y});
-					if (!destinationStack.isEmpty()) {
-						FloorTile newDestination = destinationStack.pop();
-
-						// Check if Z flag was set. That means that we've been to a location too many times, gotta try other ndoe
-						if(z_flag == 'T'){
-							return new int[]{ch, currNode._x, currNode._y};
-						}
-					}
-				}
-				if (leftNode != null) {
-					destinationStack.push(new FloorTile(by, bx));
-					move2ALocation(new int[]{ch, leftNode._x, leftNode._y});
-					if (!destinationStack.isEmpty()) {
-						FloorTile newDestination = destinationStack.pop();
-						if(z_flag == 'T'){
-							return new int[]{ch, currNode._x, currNode._y};
-						}
-					}
-				}
-
-			}
-		}
-		return new int[]{ch, bx, by};
-	}
-
-	FloorTile getNodeAhead() {
-		switch (headingTowards){
-			case 'N':
-				return currNode.north;
-			case 'S':
-				return currNode.south;
-			case 'E':
-				return currNode.east;
-			case 'W':
-				return currNode.west;
-			default:
-				return null;
-		}
-	}
-
-	FloorTile getLeftNode(){
-        switch (headingTowards){
-            case 'N':
-                return currNode.west;
-            case 'S':
-                return currNode.east;
-            case 'E':
-                return currNode.north;
-            case 'W':
-                return currNode.south;
-            default:
-                return null;
-        }
-    }
-
-	FloorTile getRightNode(){
-		switch (headingTowards){
-			case 'N':
-				return currNode.east;
-			case 'S':
-				return currNode.west;
-			case 'E':
-				return currNode.south;
-			case 'W':
-				return currNode.north;
-			default:
-				return null;
-		}
-	}
-
 
 	public FloorTile getClosestCharging() {
 		int x = this.getCurrNode().get_x();
@@ -428,7 +356,6 @@ public class Cleaner {
 
 		//change current battery level
 	}
-
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(FloorTile currentTile) {
