@@ -555,16 +555,25 @@ class CleanersTest {
 
 		floorPlan.printSuccintMap();
 
-        for (int i = 0 ; i<= 8; i++){
-            for(int j = 0; j<=5; j++){
-            	if(!floorPlan.returnNode(i, j).getAccessable())
-            		continue;
-				System.out.println("Trying to go to: x: " + i + " y: " + j);
-				cleaner.setCurrNode(floorPlan.returnNode(0, 0));
-				cleaner.moveToLocation_UsingStack(i, j);
-				assertEquals(floorPlan.returnNode(i, j), cleaner.getCurrNode());
-				assertNotNull(cleaner.getCurrentMap()[i][j]);
-            }
-        }
+
+
+		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+		cleaner.moveToLocation_UsingStack(4, 3);
+		assertEquals(floorPlan.returnNode(4, 3), cleaner.getCurrNode());
+		assertNotNull(cleaner.getCurrentMap()[4][3]);
+
+
+		System.out.println(cleaner.getCurrentMapString());
+//        for (int i = 0 ; i<= 8; i++){
+//            for(int j = 0; j<=5; j++){
+//            	if(!floorPlan.returnNode(i, j).getAccessable())
+//            		continue;
+//				System.out.println("Trying to go to: x: " + i + " y: " + j);
+//				cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+//				cleaner.moveToLocation_UsingStack(i, j);
+//				assertEquals(floorPlan.returnNode(i, j), cleaner.getCurrNode());
+//				assertNotNull(cleaner.getCurrentMap()[i][j]);
+//            }
+//        }
 	}
 }

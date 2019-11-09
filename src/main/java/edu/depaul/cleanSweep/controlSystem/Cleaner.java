@@ -123,6 +123,25 @@ public class Cleaner {
 	// it theoretically could have gone to manually
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
+//		List<FloorTile> pathOne = new LinkedList<>();
+//		List<FloorTile> pathTwo = new LinkedList<>();
+//
+//		Stack<FloorTile> pathStack = new Stack<>();
+//
+//		FloorTile target = currNode;
+//		while(target == null || !(target._x == targetX && target._y == targetY)){
+//			List<FloorTile> neighboringNodes = getNeighboringNodes(target);
+//			for (FloorTile node: neighboringNodes) {
+//				pathStack.add(node);
+//			}
+//
+//			target = pathStack.pop();
+//			pathOne =
+//
+//
+//		}
+
+
 
 		while(! (currNode._x == targetX && currNode._y == targetY ) ){
 			wrongNodes.add(currNode);
@@ -159,7 +178,7 @@ public class Cleaner {
 	}
 
 	private void addValidNodes(List<FloorTile> wrongNodes){
-		List<FloorTile> neighboringNodes = getNeighboringNodes();
+		List<FloorTile> neighboringNodes = getNeighboringNodes(currNode);
 		for (FloorTile neighbor: neighboringNodes) {
 			if(neighbor != null && neighbor.getAccessable() && !wrongNodes.contains(neighbor)){
 				validTilesStack.push(neighbor);
@@ -167,9 +186,9 @@ public class Cleaner {
 		}
 	}
 
-	private List<FloorTile> getNeighboringNodes(){
+	private List<FloorTile> getNeighboringNodes(FloorTile node){
 		return new ArrayList<FloorTile>(
-				Arrays.asList(new FloorTile[]{currNode.north, currNode.south, currNode.east, currNode.west}));
+				Arrays.asList(new FloorTile[]{node.north, node.south, node.east, node.west}));
 	}
 
 	public FloorTile getClosestCharging() {
@@ -435,6 +454,20 @@ public class Cleaner {
 
 	public FloorTile[][] getCurrentMap() {
 		return currentMap;
+	}
+
+	public String getCurrentMapString(){
+		String s = "";
+		for(int i = 0; i<=8; i++){
+			for(int j = 0; j<=5; j++){
+				if(currentMap[i][j] != null)
+					s += String.format("( %d , %d )", currentMap[i][j]._x ,currentMap[i][j]._y);
+				else
+					s += "(   ,   )";
+			}
+			s += "\n";
+		}
+		return s;
 	}
 
 	private FloorTile copyFloorTile(FloorTile tile) {
