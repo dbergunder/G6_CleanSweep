@@ -559,7 +559,7 @@ class CleanersTest {
 	@Test
 	void CleanerBlockedTest() throws IOException, SAXException, ParserConfigurationException {
 		Cleaner cleaner = new Cleaner();
-		System.out.printf("DANA   ^^^^   starting test\n");
+		System.out.printf("Testing blocking status with a floor plan, that blocks when moving to a location.\n");
 		CustomLinkedList floorPlan = new CustomLinkedList();
 
 		floorPlan.createFloorFromXML(new File("files/SamplePlanWithAttributesBlocked.xml"));
