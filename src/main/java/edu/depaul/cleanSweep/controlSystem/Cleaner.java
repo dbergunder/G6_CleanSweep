@@ -85,6 +85,7 @@ public class Cleaner {
 		int ay = locationLeft.get_y();
 		char ch = this.headingTowards;
 		
+		boolean blocked = false;
 		int bx = dest[1];
 		int by = dest[2];
 
@@ -97,7 +98,7 @@ public class Cleaner {
 		while(this.getCurrNode().get_x() != bx) {
 			if (moveAhead() == false)
 			{
-				currStatus = " Blocked in the x coordinate";
+				blocked = true; //We are blocked in the X direction, doesnt mean we are fully blocked yet.
 				break;
 			}
 			System.out.println("^^^^^^^^^heading"+this.getCurrNode().get_x()); //for test
@@ -112,7 +113,11 @@ public class Cleaner {
 		while(this.getCurrNode().get_y() != by) {
 			if (moveAhead() == false)
 			{
-				currStatus = " Blocked in the y coordinate";
+				if (blocked == true)
+				{
+					blocked = true;//both blocked in x and y direction
+					currStatus = "Blocked";
+				}
 				break;
 			}
 		}
