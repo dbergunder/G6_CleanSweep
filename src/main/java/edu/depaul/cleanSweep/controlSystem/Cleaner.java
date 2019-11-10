@@ -95,7 +95,12 @@ public class Cleaner {
 			this.changeHeading('W');
 		}
 		while(this.getCurrNode().get_x() != bx) {
-			moveAhead();
+			if (moveAhead() == false)
+			{
+				currStatus = " Blocked in the x coordinate";
+				break;
+			}
+			System.out.println("^^^^^^^^^heading"+this.getCurrNode().get_x()); //for test
 		}
 
 		if(this.getCurrNode().get_y() < by) {
@@ -105,10 +110,14 @@ public class Cleaner {
 			this.changeHeading('N');
 		}
 		while(this.getCurrNode().get_y() != by) {
-			moveAhead();
+			if (moveAhead() == false)
+			{
+				currStatus = " Blocked in the y coordinate";
+				break;
+			}
 		}
 		this.changeHeading((char) dest[0]);
-		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
+		System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
 
@@ -191,10 +200,12 @@ public class Cleaner {
 		}
 		System.out.println("Moving to " + printCoordinate());
 		// get average battery cost, log it, and subtract from battery total
-		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
+		if ((this.prevNode != null) &&  (this.currNode != null)) {
+			averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
-		this.currBattery -= averagePowerCost;
+			pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+			this.currBattery -= averagePowerCost;
+		}
 
 
 		if (this.currNode.getChargeStation()) {
