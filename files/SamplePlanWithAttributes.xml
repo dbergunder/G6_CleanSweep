@@ -245,7 +245,7 @@
 		<y>3</y>
 		<x>3</x>
 		<surfaceType>2</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>

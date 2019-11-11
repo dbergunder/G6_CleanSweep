@@ -7,11 +7,9 @@ import edu.depaul.cleanSweep.floorPlan.*;
 import org.javatuples.Pair;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Cleaner {
 
@@ -33,12 +31,18 @@ public class Cleaner {
 
 	private ArrayList<FloorTile> chargingStations = new ArrayList<FloorTile>();
 
+	private char z_flag = 'T';
+
 	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
 	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
 	// In order to traverse through the history, start at the head, and work downward
 	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
 
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
+
+	private Stack<FloorTile> destinationStack = new Stack<FloorTile>();
+
+	private Stack<FloorTile> validTilesStack = new Stack<FloorTile>();
 
 	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
@@ -107,13 +111,85 @@ public class Cleaner {
 		while(this.getCurrNode().get_y() != by) {
 			moveAhead();
 		}
+
 		this.changeHeading((char) dest[0]);
 		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
 
+	// In the spirit of "MVP first" I would like to use the move2location method,
+	// but I can't get a good enough algo running rn
+	// So I'm "cheating" and letting the robot "teleport" to a location
+	// it theoretically could have gone to manually
+	public void moveToLocation_UsingStack(int targetX, int targetY){
+		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
+//		List<FloorTile> pathOne = new LinkedList<>();
+//		List<FloorTile> pathTwo = new LinkedList<>();
+//
+//		Stack<FloorTile> pathStack = new Stack<>();
+//
+//		FloorTile target = currNode;
+//		while(target == null || !(target._x == targetX && target._y == targetY)){
+//			List<FloorTile> neighboringNodes = getNeighboringNodes(target);
+//			for (FloorTile node: neighboringNodes) {
+//				pathStack.add(node);
+//			}
+//
+//			target = pathStack.pop();
+//			pathOne =
+//
+//
+//		}
 
 
+
+		while(! (currNode._x == targetX && currNode._y == targetY ) ){
+			wrongNodes.add(currNode);
+			addValidNodes(wrongNodes);
+			teleportToNode(validTilesStack.pop());
+		}
+	}
+
+	private void teleportToNode(FloorTile node){
+		prevNode = currNode;
+		currNode = node;
+
+		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
+		cleanerHistory.add(copyFloorTile(currNode));
+
+		System.out.println("Moving to " + printCoordinate());
+		// get average battery cost, log it, and subtract from battery total
+		double averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
+
+		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		this.currBattery -= averagePowerCost;
+
+		if (this.currNode.getChargeStation()) {
+			this.currBattery = MAX_BATTERY_POWER;
+			System.out.println("************************");
+			System.out.println("Arrive charging station.");
+			System.out.println("************************");
+			System.out.println("........CHARGING........");
+			System.out.println("************************");
+			System.out.println("The battery is full.");
+			System.out.println("************************");
+			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+		}
+	}
+
+	private void addValidNodes(List<FloorTile> wrongNodes){
+		List<FloorTile> neighboringNodes = getNeighboringNodes(currNode);
+		for (FloorTile neighbor: neighboringNodes) {
+			if(neighbor != null && neighbor.getAccessable() && !wrongNodes.contains(neighbor)){
+				validTilesStack.push(neighbor);
+			}
+		}
+	}
+
+	private List<FloorTile> getNeighboringNodes(FloorTile node){
+		return new ArrayList<FloorTile>(
+				Arrays.asList(new FloorTile[]{node.north, node.south, node.east, node.west}));
+	}
 
 	public FloorTile getClosestCharging() {
 		int x = this.getCurrNode().get_x();
@@ -230,9 +306,6 @@ public class Cleaner {
 		}
 	}
 
-
-
-
 	/*
 	 * For moving left, right or back, the heading direction will change correspondingly, and then move forward.
 	 */
@@ -302,7 +375,6 @@ public class Cleaner {
 
 		//change current battery level
 	}
-
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(FloorTile currentTile) {
@@ -382,6 +454,20 @@ public class Cleaner {
 
 	public FloorTile[][] getCurrentMap() {
 		return currentMap;
+	}
+
+	public String getCurrentMapString(){
+		String s = "";
+		for(int i = 0; i<=8; i++){
+			for(int j = 0; j<=5; j++){
+				if(currentMap[i][j] != null)
+					s += String.format("( %d , %d )", currentMap[i][j]._x ,currentMap[i][j]._y);
+				else
+					s += "(   ,   )";
+			}
+			s += "\n";
+		}
+		return s;
 	}
 
 	private FloorTile copyFloorTile(FloorTile tile) {

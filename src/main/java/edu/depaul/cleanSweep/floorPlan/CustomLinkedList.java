@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import edu.depaul.cleanSweep.cell.SurfaceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -146,7 +147,31 @@ public class CustomLinkedList {
 			currNode = currRowHead; // reset the current node to the head of the next row
 		} 
 	}
-	
+	public void printSuccintMap() {
+		FloorTile currRowHead = this.head; // used to increment the row south for printing
+		FloorTile currNode = this.head; // used to increment the node east for printing
+		int counter = 0; // used to tell what the current row is
+
+		while (currRowHead != null) { // start on the first row then print what the current row is
+
+			// start at the head of the row and increment east while printing
+			while (currNode != null) {
+				// Print the coordinates at current node
+				if(currNode.getAccessable())
+					System.out.print("(" + currNode._y + "," + currNode._x + ") ");
+				else
+					System.out.print("[" + currNode._y + "," + currNode._x + "] ");
+				// Go to next node
+				currNode = currNode.east;
+			}
+
+			System.out.print("\n");
+			counter++; // increment counter after row is finished printing
+			currRowHead = currRowHead.south; // advance to the next row
+			currNode = currRowHead; // reset the current node to the head of the next row
+		}
+	}
+
 	public FloorTile returnNode(int x, int y)
 	{
 		FloorTile currRowHead = this.head; // used to increment the row south
@@ -194,9 +219,30 @@ public class CustomLinkedList {
 				Element eElement = (Element) node; // used to access tile's elements, if node exists convert to element format
 				int y = Integer.parseInt(eElement.getElementsByTagName("y").item(0).getTextContent()); // get Y
 				int x = Integer.parseInt(eElement.getElementsByTagName("x").item(0).getTextContent()); // get X
+				int dirt = 0;
+                boolean accessible = true;
+                boolean chargingStation = false;
+                TileType surfaceType = TileType.BARE;
+
+                if(eElement.getElementsByTagName("dirt").item(0) != null)
+                    dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("accessible").item(0) != null)
+				    accessible = Boolean.parseBoolean(eElement.getElementsByTagName("accessible").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("chargingStation").item(0) != null)
+                    chargingStation = Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("surfaceType").item(0) != null){
+                    surfaceType = TileType.valueOf(
+                            Integer.parseInt(
+                                    eElement.getElementsByTagName("surfaceType").item(0).getTextContent()));
+
+                }
 //				System.out.println("Y : " + y); // used for testing
 //				System.out.println("X : " + x); // used for testing
-				this.insert(y, x);
+				FloorTile temptile = new FloorTile(y, x, dirt, accessible, chargingStation, surfaceType);
+				this.insert(temptile);
 //				System.out.println("Y : "  + eElement.getElementsByTagName("y").item(0).getTextContent()); // used for testing
 //				System.out.println("X : "  + eElement.getElementsByTagName("x").item(0).getTextContent()); // used for testing
 			}
@@ -231,7 +277,7 @@ public class CustomLinkedList {
 				int dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent()); // get dirt
 				boolean chargingStation =  Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent()); // get chargingStation
 				this.insertTile(y, x, dirt, accessible, chargingStation, type);
-				}
+			}
 		}
 		
 		this.printList(); // used to test that a floor plan has been converted from xml to customlinkedlist

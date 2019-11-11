@@ -77,6 +77,26 @@ public class FloorTile implements Serializable {
 
 	}
 
+	public FloorTile(int y, int x, int dirtAmount, boolean isAccessible, boolean isChargingStation, TileType type)
+	{
+		north = null;
+		south = null;
+		east = null;
+		west = null;
+		_x = x;
+		_y = y;
+		surfaceType = type;
+		unitsOfDirt = dirtAmount;
+		isClean = true;
+		if (unitsOfDirt > 0)
+		{
+			isClean = false;
+		}
+		accessable = isAccessible;
+		chargingStation = isChargingStation;
+	}
+
+
 	public void setAccessable(boolean f) {
 		accessable = f;
 	}
