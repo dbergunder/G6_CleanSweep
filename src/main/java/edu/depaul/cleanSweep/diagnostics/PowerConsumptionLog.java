@@ -35,7 +35,10 @@ public class PowerConsumptionLog {
         }
 		
 		// formatted string header
-		String fileHeader = String.format("%-10s | %-10s | %-15s | %-15s | %-15s", "Event", "New (Y,X)", "Power Started", "Power Consumed", "Power Final");
+		String fileHeader = String.format("%-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-15s | %-15s | %-15s | %-10s ",
+				"Event", "Old (Y,X)", "New (Y,X)", "Heading To",
+				"Tile Type", "Remaining Dirt", "Power Started", "Power Consumed",
+				"Power Final", "Current Status");
 
 	    FileWriter fstream;
 	    try {
@@ -50,7 +53,7 @@ public class PowerConsumptionLog {
 	    }
 	}
 	
-	public void logPowerUsed(String event, FloorTile prevNode, FloorTile currNode, double currBattery, double powerCost) {
+	public void logData(String event, FloorTile prevNode, FloorTile currNode, double currBattery, double powerCost) {
 		String tupleCoord = String.format("(%d,%d)", currNode._y, currNode._x);
 		String append = String.format("\n%-10s | %-10s | %-15.2f | %-15.2f | %-15.2f", event, tupleCoord, currBattery, powerCost, currBattery - powerCost);
 
@@ -64,5 +67,27 @@ public class PowerConsumptionLog {
 	        System.out.println("could not write to the file");
 	        e.printStackTrace();
 	    }
+	}
+
+	public void logData(String event, FloorTile prevNode, FloorTile currNode,
+						double currBattery, double powerCost, char heading) {
+		String currCoord = String.format("(%d,%d)", currNode._y, currNode._x);
+		String prevCoord = String.format("(%d,%d)", prevNode._y, prevNode._x);
+
+		String append =
+				String.format("\n%-10s | %-10s | %-10s | %-10c | %-10s | %-14d | %-15.2f | %-15.2f | %-15.2f |",
+						event, prevCoord, currCoord, heading, currNode.getSurfaceType(), currNode.getUnitsOfDirt(),
+						currBattery, powerCost, currBattery - powerCost);
+
+		FileWriter fstream;
+		try {
+			fstream = new FileWriter(file, true); // true option will append to a power consumption log
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(append);
+			out.close();
+		} catch (IOException e) {
+			System.out.println("could not write to the file");
+			e.printStackTrace();
+		}
 	}
 }

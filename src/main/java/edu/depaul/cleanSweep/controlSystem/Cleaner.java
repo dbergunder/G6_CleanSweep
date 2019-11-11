@@ -1,12 +1,10 @@
 package edu.depaul.cleanSweep.controlSystem;
 
-import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.diagnostics.PowerConsumptionLog;
 import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -161,7 +159,7 @@ public class Cleaner {
 		// get average battery cost, log it, and subtract from battery total
 		double averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost, headingTowards);
 		this.currBattery -= averagePowerCost;
 
 		if (this.currNode.getChargeStation()) {
@@ -173,7 +171,7 @@ public class Cleaner {
 			System.out.println("************************");
 			System.out.println("The battery is full.");
 			System.out.println("************************");
-			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+			pcl.logData("Charging", prevNode, currNode, currBattery, 0);
 		}
 	}
 
@@ -269,7 +267,7 @@ public class Cleaner {
 		// get average battery cost, log it, and subtract from battery total
 		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost, headingTowards);
 		this.currBattery -= averagePowerCost;
 
 
@@ -282,7 +280,7 @@ public class Cleaner {
 			System.out.println("************************");
 			System.out.println("The battery is full.");
 			System.out.println("************************");
-			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+			pcl.logData("Charging", prevNode, currNode, currBattery, 0, headingTowards);
 		}
 
 
@@ -396,7 +394,7 @@ public class Cleaner {
 			// Add to vaccumbag
 			currentTile.decreaseDirtAmount(); //enforces 1 unit at a time
 			System.out.println("Cleaning 1 unit of dirt at " + this.printCoordinate());
-			pcl.logPowerUsed("Cleaning", currentTile, currentTile, currBattery, currentTile.getBatteryConsumption());
+			pcl.logData("Cleaning", currentTile, currentTile, currBattery, currentTile.getBatteryConsumption());
 			currBattery -= currentTile.getBatteryConsumption();
 
 			ifLowBtrGoChargingNBack(this.currBattery); //only check battery when cleaning
