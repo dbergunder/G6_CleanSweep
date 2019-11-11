@@ -555,8 +555,6 @@ class CleanersTest {
 
 		floorPlan.printSuccintMap();
 
-
-
 		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 		cleaner.moveToLocation_UsingStack(4, 3);
 		assertEquals(floorPlan.returnNode(4, 3), cleaner.getCurrNode());

@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import edu.depaul.cleanSweep.cell.SurfaceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -218,14 +219,26 @@ public class CustomLinkedList {
 				Element eElement = (Element) node; // used to access tile's elements, if node exists convert to element format
 				int y = Integer.parseInt(eElement.getElementsByTagName("y").item(0).getTextContent()); // get Y
 				int x = Integer.parseInt(eElement.getElementsByTagName("x").item(0).getTextContent()); // get X
-				int dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent());
-				boolean accessible = Boolean.parseBoolean(eElement.getElementsByTagName("accessible").item(0).getTextContent());
-				boolean chargingStation = Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent());
+				int dirt = 0;
+                boolean accessible = true;
+                boolean chargingStation = false;
+                TileType surfaceType = TileType.BARE;
 
-				//this might not work
-				TileType surfaceType = TileType.valueOf(
-						Integer.parseInt(
-							eElement.getElementsByTagName("surfaceType").item(0).getTextContent()));
+                if(eElement.getElementsByTagName("dirt").item(0) != null)
+                    dirt = Integer.parseInt(eElement.getElementsByTagName("dirt").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("accessible").item(0) != null)
+				    accessible = Boolean.parseBoolean(eElement.getElementsByTagName("accessible").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("chargingStation").item(0) != null)
+                    chargingStation = Boolean.parseBoolean(eElement.getElementsByTagName("chargingStation").item(0).getTextContent());
+
+                if(eElement.getElementsByTagName("surfaceType").item(0) != null){
+                    surfaceType = TileType.valueOf(
+                            Integer.parseInt(
+                                    eElement.getElementsByTagName("surfaceType").item(0).getTextContent()));
+
+                }
 //				System.out.println("Y : " + y); // used for testing
 //				System.out.println("X : " + x); // used for testing
 				FloorTile temptile = new FloorTile(y, x, dirt, accessible, chargingStation, surfaceType);
