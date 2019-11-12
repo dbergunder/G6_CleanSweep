@@ -46,19 +46,76 @@ public class Cleaner {
 
 	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
+	
+	private CustomLinkedList sensorMap = null; // the cleaner stores it's own sensor map for checking completion
+	private boolean cleaningComplete; //the cleaner can check if the map is complete
 
 	public Cleaner() throws IOException{
+		sensorMap = new CustomLinkedList();
+		cleaningComplete = false;
 		pcl = PowerConsumptionLog.getInstance();
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
 	}
-
-	public Cleaner(double battery, int dirtCapacity, FloorTile node) {
-		currBattery = battery;
-		currDirtCapacity = dirtCapacity;
-		currNode = node;
+	
+	public CustomLinkedList getSensorMap() {
+		//method used to retrieve private sensor map
+		return this.sensorMap;
+	}
+	
+	public void setSensorMap(CustomLinkedList testMap) {
+		//method used to set a sensor map to the cleaner, useful for setting custom maps in tests
+		this.sensorMap = testMap;
+	}
+	
+	private boolean checkMapCleaningComplete() {
+		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
+		FloorTile currSensorNode = this.sensorMap.getHead(); // get sensor map head
+		boolean loopCheck = true; // loop checker to determine if all information is correct
+		
+		// check for nulls?
+		
+		while(currSensorNode != null) { // loop through the sensorNodes (Y-Axis)
+			if (currSensorNode.get_y()%2 == 0) { // depending of row number move east if even, move west if odd 
+				while(currSensorNode.east != null) { // loop through the sensorNodes (X-Axis) east if row is even
+					loopCheck = checkNodeCleanAndVisited(currSensorNode);
+					if (!loopCheck) {
+						break;
+					}
+					currSensorNode = currSensorNode.east; // move checker east
+				}
+			} else {
+				while(currSensorNode.west != null) { // loop through the sensorNodes (X-Axis) west if row is odd
+					loopCheck = checkNodeCleanAndVisited(currSensorNode);
+					if (!loopCheck) {
+						break;
+					}
+					currSensorNode = currSensorNode.west; // move checker west
+				}
+			}
+			
+			if (currSensorNode.south != null) { // after looping all the way east/west then move south 1 row if not empty
+				currSensorNode = currSensorNode.south;
+			}
+		}
+		
+		return loopCheck;
 	}
 
+	private boolean checkNodeCleanAndVisited(FloorTile sensor) {
+		boolean visitedAndCleaned = true;
+		int checkY = sensor.get_y();
+		int checkX = sensor.get_x();
+		
+		if (sensor.getAccessable()) {
+			if (!this.currentMap[checkY][checkX].getClean() || !cleanerHistory.contains(copyFloorTile(sensor))) {
+				visitedAndCleaned = false;
+			}
+		}
+		
+		return visitedAndCleaned;
+	}
+	
 	public void setCurrBattery(double cb) {
 		currBattery = cb;
 	}
@@ -232,8 +289,6 @@ public class Cleaner {
 			if(this.currNode.north != null && this.currNode.north.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.north;
-				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
-				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -241,8 +296,6 @@ public class Cleaner {
 			if(this.currNode.south != null && this.currNode.south.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.south;
-				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
-				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -250,8 +303,6 @@ public class Cleaner {
 			if(this.currNode.west != null && this.currNode.west.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.west;
-				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
-				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
@@ -259,12 +310,16 @@ public class Cleaner {
 			if(this.currNode.east != null && this.currNode.east.getAccessable()) {
 				this.prevNode = currNode;
 				this.currNode = currNode.east;
-				currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
-				cleanerHistory.add(copyFloorTile(currNode));
 				flag = true;
 			}
 			break;
 		}
+
+		this.cleaningComplete = checkMapCleaningComplete(); // check if the map is completely visited and cleaned
+		
+		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode); // copy sensor node to the cleaner's map
+		cleanerHistory.add(copyFloorTile(currNode)); // add the sensor node to the cleaner's history
+		
 		System.out.println("Moving to " + printCoordinate());
 		// get average battery cost, log it, and subtract from battery total
 		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;

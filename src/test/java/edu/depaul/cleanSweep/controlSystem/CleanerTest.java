@@ -22,7 +22,7 @@ import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class CleanersTest {
+class CleanerTest {
 
 	private static final int MAX_DIRT_CAPACITY = 50;
 
@@ -197,8 +197,6 @@ class CleanersTest {
 
         assertEquals(0, getFloorTile(cleaner, 2)._x);
         assertEquals(2, getFloorTile(cleaner, 2)._y);
-
-        cleaner.moveAhead();
 
         assertEquals(3, cleaner.getCleanerHistory().size());
     }
