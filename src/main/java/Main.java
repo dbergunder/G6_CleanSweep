@@ -51,15 +51,15 @@ public class Main{
 		cleaner.moveAhead();
 		
 		while(!cleaner.getCurrNode().getClean()) {
-			cleaner.cleanSurface(cleaner.getCurrNode());	
+			cleaner.cleanSurface();	
 		}
 		
-		for(int i=0;i<4;i++) {
-			for(int j=0;j<3;j++) {
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 3; j++) {
 				cleaner.moveAhead();
 				
 				while(!cleaner.getCurrNode().getClean()) {
-					cleaner.cleanSurface(cleaner.getCurrNode());	
+					cleaner.cleanSurface();	
 				}
 			}
 			
@@ -67,23 +67,23 @@ public class Main{
 				if(i % 2 == 0) {
 					cleaner.moveRight();
 					while(!cleaner.getCurrNode().getClean()) {
-						cleaner.cleanSurface(cleaner.getCurrNode());	
+						cleaner.cleanSurface();	
 					}
 					
 					cleaner.moveRight();
 					while(!cleaner.getCurrNode().getClean()) {
-						cleaner.cleanSurface(cleaner.getCurrNode());	
+						cleaner.cleanSurface();	
 					}
 					
 				} else {
 					cleaner.moveLeft();
 					while(!cleaner.getCurrNode().getClean()) {
-						cleaner.cleanSurface(cleaner.getCurrNode());	
+						cleaner.cleanSurface();	
 					}
 					
 					cleaner.moveLeft();
 					while(!cleaner.getCurrNode().getClean()) {
-						cleaner.cleanSurface(cleaner.getCurrNode());	
+						cleaner.cleanSurface();	
 					}
 				}
 			}

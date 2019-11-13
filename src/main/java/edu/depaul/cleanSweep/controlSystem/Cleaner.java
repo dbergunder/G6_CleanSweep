@@ -73,7 +73,20 @@ public class Cleaner {
 		//method used to set a sensor map to the cleaner, useful for setting custom maps in tests
 		this.sensorMap = testMap;
 	}
+
+	public boolean isAtCapacity() {
+		return atCapacity;
+	}
+
+	public boolean isAlmostAtCapacity() { 
+		return almostAtCapacity; 
+	}
+
+	public String getCleanerStatus () {
+		return currStatus;
+	}
 	
+	// check if map is completely cleaned and visited
 	private boolean checkMapCleaningComplete() {
 		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
 		FloorTile currSensorNode = this.sensorMap.getHead(); // get sensor map head
@@ -122,7 +135,7 @@ public class Cleaner {
 		return visitedAndCleaned;
 	}
 
-	//only move, no clean.
+	// only move, no clean.
 	public int[] move2ALocation(int[] dest) {
 		FloorTile locationLeft = this.getCurrNode();
 		int ax = locationLeft.get_x();
@@ -157,6 +170,8 @@ public class Cleaner {
 		return new int[] {ch, ax, ay};
 	}
 	
+	
+	// for navigating away from obsticles
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
 
@@ -268,7 +283,7 @@ public class Cleaner {
 			}
 			break;
 		}
-
+		//TODO
 		this.cleaningComplete = checkMapCleaningComplete(); // check if the map is completely visited and cleaned
 		
 		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode); // copy sensor node to the cleaner's map
@@ -293,7 +308,6 @@ public class Cleaner {
 			System.out.println("************************");
 			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
 		}
-
 
 		return flag;
 	}
@@ -385,10 +399,10 @@ public class Cleaner {
 	}
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
-	public void cleanSurface(FloorTile currentTile) {
+	public void cleanSurface() {
 
 		// Cell is currently clean. No need to do anything
-		if(currentTile.getClean() == true) {
+		if(this.currNode.getClean() == true) {
 			return;
 		}
 
@@ -401,14 +415,14 @@ public class Cleaner {
 		}
 		else {
 			// Add to vaccumbag
-			currentTile.decreaseDirtAmount(); //enforces 1 unit at a time
+			this.currNode.decreaseDirtAmount(); //enforces 1 unit at a time
 			System.out.println("Cleaning 1 unit of dirt at " + this.printCoordinate());
-			pcl.logPowerUsed("Cleaning", currentTile, currentTile, currBattery, currentTile.getBatteryConsumption());
-			currBattery -= currentTile.getBatteryConsumption();
+			pcl.logPowerUsed("Cleaning", this.currNode, this.currNode, currBattery, this.currNode.getBatteryConsumption());
+			currBattery -= this.currNode.getBatteryConsumption();
 
 			ifLowBtrGoChargingNBack(this.currBattery); //only check battery when cleaning
 
-			vacuumBag.add(new Pair<Integer, TileType>(1, currentTile.getSurfaceType()));
+			vacuumBag.add(new Pair<Integer, TileType>(1, this.currNode.getSurfaceType()));
 			checkBagSize();
 		}
 	}
@@ -423,18 +437,6 @@ public class Cleaner {
 		else if(almostAtCapacity) {
 			currStatus = "The Clean Sweep's current bag size is: " + getCurrentBagSize();
 		}
-	}
-
-	public boolean isAtCapacity() {
-		return atCapacity;
-	}
-
-	public boolean isAlmostAtCapacity() { 
-		return almostAtCapacity; 
-	}
-
-	public String getCleanerStatus () {
-		return currStatus;
 	}
 
 	public Integer getCurrentBagSize(){
