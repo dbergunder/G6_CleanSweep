@@ -1,61 +1,67 @@
 package edu.depaul.cleanSweep.controlSystem;
 
-import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.diagnostics.PowerConsumptionLog;
 import edu.depaul.cleanSweep.floorPlan.*;
 
 import org.javatuples.Pair;
-
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Cleaner {
-
+	// variables related to battery consumption
 	private static final double MAX_BATTERY_POWER = 250;
 	private static final int MAX_DIRT_CAPACITY = 50;
-
 	private double currBattery;
 	private double lowBatteryThreshold = 35;
-
+	private static PowerConsumptionLog pcl;
+	// variables related to dirt capacity
 	private int currDirtCapacity;
 	private boolean atCapacity;
 	private boolean almostAtCapacity; //about dirt size
-
+	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
+	// variables related to movement
 	public char headingTowards = 'N';
 	private String currStatus = new String("No status yet");
-	private static PowerConsumptionLog pcl;
 	private FloorTile currNode;
 	private FloorTile prevNode = null;
-
 	private ArrayList<FloorTile> chargingStations = new ArrayList<FloorTile>();
-
-	private char z_flag = 'T';
-
-	// The vacuumbag is a list, with each node representing a "cleaning" of a tile
-	// Each clean appends a Pair representing the amount of dirt cleaned, as well the surface type
-	// In order to traverse through the history, start at the head, and work downward
-	private List<Pair<Integer, TileType>> vacuumBag = new LinkedList<Pair<Integer, TileType>>();
-
 	private ArrayList<FloorTile> cleanerHistory = new ArrayList<FloorTile>();
-
-	private Stack<FloorTile> destinationStack = new Stack<FloorTile>();
-
 	private Stack<FloorTile> validTilesStack = new Stack<FloorTile>();
-
-	// Todo - add better methods to custom linked list to allow for more dynamic insertion, searching, and deletion
 	private FloorTile[][] currentMap = new FloorTile[1000][1000];
-	
 	private CustomLinkedList sensorMap = null; // the cleaner stores it's own sensor map for checking completion
 	private boolean cleaningComplete; //the cleaner can check if the map is complete
 
+	// constructor
 	public Cleaner() throws IOException{
 		sensorMap = new CustomLinkedList();
 		cleaningComplete = false;
 		pcl = PowerConsumptionLog.getInstance();
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
+	}
+	
+	// getters/setters
+	public double getCurrBattery() {
+		return currBattery;
+	}
+	
+	public void setCurrBattery(double cb) {
+		currBattery = cb;
+	}
+
+	public void setCurrDirtCapacity(int cdc) {
+		currDirtCapacity = cdc;
+	}
+
+	public FloorTile getCurrNode() {
+		return currNode != null ? currNode : new FloorTile(0, 0);
+	}
+
+	public void setCurrNode(FloorTile n) {
+		currNode = n;
+		currentMap[n._x][n._y] = copyFloorTile(n);
+		cleanerHistory.add(copyFloorTile(currNode));
 	}
 	
 	public CustomLinkedList getSensorMap() {
@@ -115,29 +121,6 @@ public class Cleaner {
 		
 		return visitedAndCleaned;
 	}
-	
-	public void setCurrBattery(double cb) {
-		currBattery = cb;
-	}
-
-	public void setCurrDirtCapacity(int cdc) {
-		currDirtCapacity = cdc;
-	}
-
-	public double getCurrBattery() {
-		return currBattery;
-	}
-
-	public void setCurrNode(FloorTile n) {
-		currNode = n;
-		currentMap[n._x][n._y] = copyFloorTile(n);
-		cleanerHistory.add(copyFloorTile(currNode));
-	}
-
-
-	public FloorTile getCurrNode() {
-		return currNode != null ? currNode : new FloorTile(0, 0);
-	}
 
 	//only move, no clean.
 	public int[] move2ALocation(int[] dest) {
@@ -173,32 +156,9 @@ public class Cleaner {
 		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
-
-	// In the spirit of "MVP first" I would like to use the move2location method,
-	// but I can't get a good enough algo running rn
-	// So I'm "cheating" and letting the robot "teleport" to a location
-	// it theoretically could have gone to manually
+	
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
-//		List<FloorTile> pathOne = new LinkedList<>();
-//		List<FloorTile> pathTwo = new LinkedList<>();
-//
-//		Stack<FloorTile> pathStack = new Stack<>();
-//
-//		FloorTile target = currNode;
-//		while(target == null || !(target._x == targetX && target._y == targetY)){
-//			List<FloorTile> neighboringNodes = getNeighboringNodes(target);
-//			for (FloorTile node: neighboringNodes) {
-//				pathStack.add(node);
-//			}
-//
-//			target = pathStack.pop();
-//			pathOne =
-//
-//
-//		}
-
-
 
 		while(! (currNode._x == targetX && currNode._y == targetY ) ){
 			wrongNodes.add(currNode);
@@ -276,39 +236,33 @@ public class Cleaner {
 	}
 
 
-	/*
-	 * According to the current heading direction, first check if the corresponding side is blocked,
-	 * and then move to the next cell.
-	 */
+	// According to the current heading direction, first check if the corresponding side is blocked, and then move to the next cell.
 	public boolean moveAhead() {
 		boolean flag = false;
 		double averagePowerCost;
+		this.prevNode = currNode;
 
 		switch(this.headingTowards) {
 		case 'N':
 			if(this.currNode.north != null && this.currNode.north.getAccessable()) {
-				this.prevNode = currNode;
 				this.currNode = currNode.north;
 				flag = true;
 			}
 			break;
 		case 'S':
 			if(this.currNode.south != null && this.currNode.south.getAccessable()) {
-				this.prevNode = currNode;
 				this.currNode = currNode.south;
 				flag = true;
 			}
 			break;
 		case 'W':
 			if(this.currNode.west != null && this.currNode.west.getAccessable()) {
-				this.prevNode = currNode;
 				this.currNode = currNode.west;
 				flag = true;
 			}
 			break;
 		case 'E':
 			if(this.currNode.east != null && this.currNode.east.getAccessable()) {
-				this.prevNode = currNode;
 				this.currNode = currNode.east;
 				flag = true;
 			}
@@ -321,9 +275,9 @@ public class Cleaner {
 		cleanerHistory.add(copyFloorTile(currNode)); // add the sensor node to the cleaner's history
 		
 		System.out.println("Moving to " + printCoordinate());
+		
 		// get average battery cost, log it, and subtract from battery total
 		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
-
 		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
 		this.currBattery -= averagePowerCost;
 
@@ -361,9 +315,8 @@ public class Cleaner {
 		}
 	}
 
-	/*
-	 * For moving left, right or back, the heading direction will change correspondingly, and then move forward.
-	 */
+	
+	//For moving left, right or back, the heading direction will change correspondingly, and then move forward.
 	public void moveLeft() {
 		switch(this.headingTowards) {
 		case 'N':
@@ -433,7 +386,6 @@ public class Cleaner {
 
 	// Check for "cleanliness" of current surface. Clean if need be and update capacity
 	public void cleanSurface(FloorTile currentTile) {
-		TileType surfacedCleaned = currentTile.getSurfaceType();
 
 		// Cell is currently clean. No need to do anything
 		if(currentTile.getClean() == true) {
@@ -477,7 +429,9 @@ public class Cleaner {
 		return atCapacity;
 	}
 
-	public boolean isAlmostAtCapacity() { return almostAtCapacity; }
+	public boolean isAlmostAtCapacity() { 
+		return almostAtCapacity; 
+	}
 
 	public String getCleanerStatus () {
 		return currStatus;
@@ -497,12 +451,9 @@ public class Cleaner {
 		headingTowards = h;
 	}
 
-	public char getHeading() {return this.headingTowards;}
-
-	public double getBatteryPower() {
-		return currBattery;
+	public char getHeading() {
+		return this.headingTowards;
 	}
-
 	public ArrayList<FloorTile> getCleanerHistory() {
 		return cleanerHistory;
 	}

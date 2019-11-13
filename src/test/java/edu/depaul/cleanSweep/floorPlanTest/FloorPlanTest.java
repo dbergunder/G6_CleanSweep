@@ -2,17 +2,12 @@ package edu.depaul.cleanSweep.floorPlanTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.depaul.cleanSweep.controlSystem.Cleaner;
 import edu.depaul.cleanSweep.floorPlan.*;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 

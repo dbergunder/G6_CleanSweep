@@ -7,8 +7,6 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import edu.depaul.cleanSweep.cell.SurfaceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -150,7 +148,6 @@ public class CustomLinkedList {
 	public void printSuccintMap() {
 		FloorTile currRowHead = this.head; // used to increment the row south for printing
 		FloorTile currNode = this.head; // used to increment the node east for printing
-		int counter = 0; // used to tell what the current row is
 
 		while (currRowHead != null) { // start on the first row then print what the current row is
 
@@ -166,7 +163,6 @@ public class CustomLinkedList {
 			}
 
 			System.out.print("\n");
-			counter++; // increment counter after row is finished printing
 			currRowHead = currRowHead.south; // advance to the next row
 			currNode = currRowHead; // reset the current node to the head of the next row
 		}

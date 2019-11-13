@@ -1,24 +1,17 @@
 package edu.depaul.cleanSweep.controlSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
-import edu.depaul.cleanSweep.controlSystem.*;
 import edu.depaul.cleanSweep.floorPlan.*;
 
-import edu.depaul.cleanSweep.cell.Cell;
-import edu.depaul.cleanSweep.cell.SurfaceType;
 import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import edu.depaul.cleanSweep.floorPlan.FloorTile;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -260,13 +253,13 @@ class CleanerTest {
 		System.out.println("current location\n" + cleaner.printCoordinate());
 		assert(cleaner.getCurrNode()._x == 0);
 		assert(cleaner.getCurrNode()._y == 0);
-		assertEquals(250.00, cleaner.getBatteryPower());
+		assertEquals(250.00, cleaner.getCurrBattery());
 
 		System.out.println("\nturn ahead");
 		cleaner.moveAhead();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(248.50, cleaner.getBatteryPower());
+		assertEquals(248.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move backward
@@ -274,7 +267,7 @@ class CleanerTest {
 		cleaner.moveBack();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(247.00, cleaner.getBatteryPower());
+		assertEquals(247.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move left
@@ -282,7 +275,7 @@ class CleanerTest {
 		cleaner.moveLeft();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(245.00, cleaner.getBatteryPower());
+		assertEquals(245.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move right
@@ -293,7 +286,7 @@ class CleanerTest {
 		cleaner.moveRight();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(242.50, cleaner.getBatteryPower());
+		assertEquals(242.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 	}
 
@@ -316,17 +309,17 @@ class CleanerTest {
 		System.out.println("current location\n" + cleaner.printCoordinate());
 		assert(cleaner.getCurrNode()._x == 0);
 		assert(cleaner.getCurrNode()._y == 0);
-		assertEquals(250.00, cleaner.getBatteryPower());
+		assertEquals(250.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(249.00, cleaner.getBatteryPower());
+		assertEquals(249.00, cleaner.getCurrBattery());
 
 		System.out.println("\nturn ahead");
 		cleaner.moveAhead();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(247.50, cleaner.getBatteryPower());
+		assertEquals(247.50, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(245.50, cleaner.getBatteryPower());
+		assertEquals(245.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move backward
@@ -334,9 +327,9 @@ class CleanerTest {
 		cleaner.moveBack();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(244.00, cleaner.getBatteryPower());
+		assertEquals(244.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(244.00, cleaner.getBatteryPower());
+		assertEquals(244.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move left
@@ -344,9 +337,9 @@ class CleanerTest {
 		cleaner.moveLeft();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(242.00, cleaner.getBatteryPower());
+		assertEquals(242.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(239.00, cleaner.getBatteryPower());
+		assertEquals(239.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move right
@@ -357,9 +350,9 @@ class CleanerTest {
 		cleaner.moveRight();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(236.50, cleaner.getBatteryPower());
+		assertEquals(236.50, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(234.50, cleaner.getBatteryPower());
+		assertEquals(234.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 	}
 
@@ -382,17 +375,17 @@ class CleanerTest {
 		System.out.println("current location\n" + cleaner.printCoordinate());
 		assert(cleaner.getCurrNode()._x == 0);
 		assert(cleaner.getCurrNode()._y == 0);
-		assertEquals(250.00, cleaner.getBatteryPower());
+		assertEquals(250.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(249.00, cleaner.getBatteryPower());
+		assertEquals(249.00, cleaner.getCurrBattery());
 
 		System.out.println("\nturn ahead");
 		cleaner.moveAhead();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(247.50, cleaner.getBatteryPower());
+		assertEquals(247.50, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(245.50, cleaner.getBatteryPower());
+		assertEquals(245.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move backward
@@ -400,9 +393,9 @@ class CleanerTest {
 		cleaner.moveBack();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(0, cleaner.getCurrNode().get_y());
-		assertEquals(244.00, cleaner.getBatteryPower());
+		assertEquals(244.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(244.00, cleaner.getBatteryPower());
+		assertEquals(244.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move left
@@ -410,9 +403,9 @@ class CleanerTest {
 		cleaner.moveLeft();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(242.00, cleaner.getBatteryPower());
+		assertEquals(242.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface(cleaner.getCurrNode());
-		assertEquals(239.00, cleaner.getBatteryPower());
+		assertEquals(239.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move right
@@ -423,7 +416,7 @@ class CleanerTest {
 		cleaner.moveRight();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(250.00, cleaner.getBatteryPower());
+		assertEquals(250.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 	}
 

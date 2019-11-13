@@ -1,6 +1,5 @@
 import edu.depaul.cleanSweep.controlSystem.*;
 import edu.depaul.cleanSweep.floorPlan.*;
-import edu.depaul.cleanSweep.diagnostics.*;
 
 import org.xml.sax.SAXException;
 
@@ -9,8 +8,8 @@ import java.io.*;
 
 public class Main{
 
-	private static CustomLinkedList xmlFloorPlan = new CustomLinkedList();
-	private static CustomLinkedList myFloor = new CustomLinkedList();
+//	private static CustomLinkedList xmlFloorPlan = new CustomLinkedList();
+//	private static CustomLinkedList myFloor = new CustomLinkedList();
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
@@ -50,104 +49,44 @@ public class Main{
 		
 		cleaner.changeHeading('E');
 		cleaner.moveAhead();
+		
 		while(!cleaner.getCurrNode().getClean()) {
 			cleaner.cleanSurface(cleaner.getCurrNode());	
-			}
+		}
+		
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<3;j++) {
 				cleaner.moveAhead();
+				
 				while(!cleaner.getCurrNode().getClean()) {
-				cleaner.cleanSurface(cleaner.getCurrNode());	
+					cleaner.cleanSurface(cleaner.getCurrNode());	
 				}
 			}
+			
 			if(i != 3) {
 				if(i % 2 == 0) {
 					cleaner.moveRight();
 					while(!cleaner.getCurrNode().getClean()) {
 						cleaner.cleanSurface(cleaner.getCurrNode());	
 					}
+					
 					cleaner.moveRight();
 					while(!cleaner.getCurrNode().getClean()) {
 						cleaner.cleanSurface(cleaner.getCurrNode());	
-						}
-				}else {
+					}
+					
+				} else {
 					cleaner.moveLeft();
 					while(!cleaner.getCurrNode().getClean()) {
 						cleaner.cleanSurface(cleaner.getCurrNode());	
-						}
+					}
+					
 					cleaner.moveLeft();
 					while(!cleaner.getCurrNode().getClean()) {
 						cleaner.cleanSurface(cleaner.getCurrNode());	
-						}
-				}
-			}
-		}
-
-
-
-
-/*		
-
-
-		// Read the Sample Floor Plan XML file
-		File xmlFile = new File("files/SamplePlan.xml");
-//		System.out.println(xmlFile.exists()); // used for testing
-
-		// convert xml file into linked list
-		xmlFloorPlan.convertXMLToCustomLinkedList(xmlFile);
-
-		//Create cleaner, and create floor plan of 100 tiles. 
-		//Started moving around floor, should run into obstacles.
-		Cleaner myCleaner = new Cleaner();
-		createFloor();
-		myCleaner.setCurrNode(myFloor.returnNode(1, 1));
-		for (int i = 0; i < 10;i++)
-		{
-			//TODO update when navigation is done
-			if(myCleaner.moveAhead() == false)
-			{
-				myCleaner.moveLeft();
-			}
-			System.out.println(myCleaner.printCoordinate());
-		}
-
-		System.out.println(myCleaner.getCleanerStatus());
-	}
-
-	private static void createFloor()
-	{
-		int odds = 0;
-
-		for (int i = 0; i < 10; i++)
-		{
-			for(int j = 0; j < 10; j++)
-			{
-				myFloor.insert(i, j);
-			}
-		}
-		for (int i = 0; i < 10; i++)
-		{
-			for(int j = 0; j < 10; j++)
-			{
-		    	if(odds % 2 == 0) 
-				{
-					if(myFloor.returnNode(i, j) != null)
-					{
-						myFloor.returnNode(i, j).setAccessable(false);
-					}
-				}
-				else 
-				{
-					if(myFloor.returnNode(i,j) != null)
-					{
-						myFloor.returnNode(i, j).setAccessable(true);	
 					}
 				}
 			}
-		odds = odds + 1;
 		}
-		myFloor.printList();
-
-		 */
 	}
 }
