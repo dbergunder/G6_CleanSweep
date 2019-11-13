@@ -14,7 +14,7 @@ public class PowerConsumptionLog {
 	
 	// singleton constructor
 	private PowerConsumptionLog() throws IOException {
-		file = new File("files/PowerConsumptionLog.txt");
+		file = new File("files/DiagnosticsLog.txt");
 		startPowerConsumptionLog();
 	}
 	
