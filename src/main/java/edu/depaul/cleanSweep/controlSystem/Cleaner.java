@@ -423,7 +423,7 @@ public class Cleaner {
 			// Add to vaccumbag
 			this.currNode.decreaseDirtAmount(); // enforces 1 unit at a time
 			System.out.println("Cleaning 1 unit of dirt at " + this.printCoordinate());
-			pcl.logData("Cleaning", currNode, currNode, currBattery, currentTile.getBatteryConsumption());
+			pcl.logData("Cleaning", currNode, currNode, currBattery, currNode.getBatteryConsumption());
 			currBattery -= currNode.getBatteryConsumption();
 
 			ifLowBtrGoChargingNBack(this.currBattery); //only check battery when cleaning
