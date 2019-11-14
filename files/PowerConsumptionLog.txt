@@ -1,2 +1,0 @@
-Event      | New (Y,X)  | Power Started   | Power Consumed  | Power Final    
-
