@@ -60,8 +60,8 @@ public class Cleaner {
 
 	public void setCurrNode(FloorTile n) {
 		currNode = n;
-		currentMap[n._x][n._y] = copyFloorTile(n);
-		cleanerHistory.add(copyFloorTile(currNode));
+		this.currentMap[n.get_x()][n.get_y()] = copyFloorTile(n);
+		cleanerHistory.add(n);
 	}
 	
 	public CustomLinkedList getSensorMap() {
@@ -72,6 +72,7 @@ public class Cleaner {
 	public void setSensorMap(CustomLinkedList testMap) {
 		//method used to set a sensor map to the cleaner, useful for setting custom maps in tests
 		this.sensorMap = testMap;
+		setCurrNode(this.sensorMap.getHead());
 	}
 
 	public boolean isAtCapacity() {
@@ -103,6 +104,7 @@ public class Cleaner {
 					}
 					currSensorNode = currSensorNode.east; // move checker east
 				}
+				loopCheck = checkNodeCleanAndVisited(currSensorNode);
 			} else {
 				while(currSensorNode.west != null) { // loop through the sensorNodes (X-Axis) west if row is odd
 					loopCheck = checkNodeCleanAndVisited(currSensorNode);
@@ -111,10 +113,17 @@ public class Cleaner {
 					}
 					currSensorNode = currSensorNode.west; // move checker west
 				}
+				loopCheck = checkNodeCleanAndVisited(currSensorNode);
+			}
+			
+			if (!loopCheck) {
+				break;
 			}
 			
 			if (currSensorNode.south != null) { // after looping all the way east/west then move south 1 row if not empty
 				currSensorNode = currSensorNode.south;
+			} else {
+				break;
 			}
 		}
 		
@@ -122,13 +131,12 @@ public class Cleaner {
 	}
 
 	private boolean checkNodeCleanAndVisited(FloorTile sensor) {
-		boolean visitedAndCleaned = true;
+		boolean visitedAndCleaned = false;
 		int checkY = sensor.get_y();
 		int checkX = sensor.get_x();
-		
 		if (sensor.getAccessable()) {
-			if (!this.currentMap[checkY][checkX].getClean() || !cleanerHistory.contains(copyFloorTile(sensor))) {
-				visitedAndCleaned = false;
+			if (this.sensorMap.returnNode(checkX, checkY).getClean() && cleanerHistory.contains(sensor)) {
+				visitedAndCleaned = true;
 			}
 		}
 		
@@ -183,17 +191,17 @@ public class Cleaner {
 	}
 
 	private void teleportToNode(FloorTile node){
-		prevNode = currNode;
-		currNode = node;
+		this.prevNode = this.currNode;
+		this.currNode = node;
 
-		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode);
-		cleanerHistory.add(copyFloorTile(currNode));
+		currentMap[this.currNode._x][this.currNode._y] = copyFloorTile(this.currNode);
+		cleanerHistory.add(this.currNode);
 
 		System.out.println("Moving to " + printCoordinate());
 		// get average battery cost, log it, and subtract from battery total
 		double averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		pcl.logPowerUsed("Movement", this.prevNode, this.currNode, this.currBattery, averagePowerCost);
 		this.currBattery -= averagePowerCost;
 
 		if (this.currNode.getChargeStation()) {
@@ -205,12 +213,12 @@ public class Cleaner {
 			System.out.println("************************");
 			System.out.println("The battery is full.");
 			System.out.println("************************");
-			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+			pcl.logPowerUsed("Charging", this.prevNode, this.currNode, this.currBattery, 0);
 		}
 	}
 
 	private void addValidNodes(List<FloorTile> wrongNodes){
-		List<FloorTile> neighboringNodes = getNeighboringNodes(currNode);
+		List<FloorTile> neighboringNodes = getNeighboringNodes(this.currNode);
 		for (FloorTile neighbor: neighboringNodes) {
 			if(neighbor != null && neighbor.getAccessable() && !wrongNodes.contains(neighbor)){
 				validTilesStack.push(neighbor);
@@ -255,45 +263,43 @@ public class Cleaner {
 	public boolean moveAhead() {
 		boolean flag = false;
 		double averagePowerCost;
-		this.prevNode = currNode;
+		this.prevNode = this.currNode;
 
 		switch(this.headingTowards) {
 		case 'N':
 			if(this.currNode.north != null && this.currNode.north.getAccessable()) {
-				this.currNode = currNode.north;
+				this.currNode = this.currNode.north;
 				flag = true;
 			}
 			break;
 		case 'S':
 			if(this.currNode.south != null && this.currNode.south.getAccessable()) {
-				this.currNode = currNode.south;
+				this.currNode = this.currNode.south;
 				flag = true;
 			}
 			break;
 		case 'W':
 			if(this.currNode.west != null && this.currNode.west.getAccessable()) {
-				this.currNode = currNode.west;
+				this.currNode = this.currNode.west;
 				flag = true;
 			}
 			break;
 		case 'E':
 			if(this.currNode.east != null && this.currNode.east.getAccessable()) {
-				this.currNode = currNode.east;
+				this.currNode = this.currNode.east;
 				flag = true;
 			}
 			break;
 		}
-		//TODO
-		this.cleaningComplete = checkMapCleaningComplete(); // check if the map is completely visited and cleaned
 		
-		currentMap[currNode._x][currNode._y] = copyFloorTile(currNode); // copy sensor node to the cleaner's map
-		cleanerHistory.add(copyFloorTile(currNode)); // add the sensor node to the cleaner's history
+		currentMap[this.currNode._x][this.currNode._y] = copyFloorTile(this.currNode); // copy sensor node to the cleaner's map
+		cleanerHistory.add(this.currNode); // add the sensor node to the cleaner's history
 		
 		System.out.println("Moving to " + printCoordinate());
 		
 		// get average battery cost, log it, and subtract from battery total
 		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
-		pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+		pcl.logPowerUsed("Movement", this.prevNode, this.currNode, this.currBattery, averagePowerCost);
 		this.currBattery -= averagePowerCost;
 
 
@@ -306,7 +312,7 @@ public class Cleaner {
 			System.out.println("************************");
 			System.out.println("The battery is full.");
 			System.out.println("************************");
-			pcl.logPowerUsed("Charging", prevNode, currNode, currBattery, 0);
+			pcl.logPowerUsed("Charging", this.prevNode, this.currNode, this.currBattery, 0);
 		}
 
 		return flag;
@@ -402,28 +408,45 @@ public class Cleaner {
 	public void cleanSurface() {
 
 		// Cell is currently clean. No need to do anything
-		if(this.currNode.getClean() == true) {
+		if(this.currNode.getClean()) {
 			return;
 		}
 
 		// Cell is not clean, clean it, update bag, and change cell state
 		Integer spaceLeft = MAX_DIRT_CAPACITY - getCurrentBagSize();
+		
 		// Check for space
 		if(spaceLeft <= 0 || atCapacity) {
 			// Can't hold any more. Do not clean cell
 			return;
-		}
-		else {
+		} else {
 			// Add to vaccumbag
-			this.currNode.decreaseDirtAmount(); //enforces 1 unit at a time
+			this.currNode.decreaseDirtAmount(); // enforces 1 unit at a time
 			System.out.println("Cleaning 1 unit of dirt at " + this.printCoordinate());
-			pcl.logPowerUsed("Cleaning", this.currNode, this.currNode, currBattery, this.currNode.getBatteryConsumption());
+			pcl.logPowerUsed("Cleaning", this.currNode, this.currNode, this.currBattery, this.currNode.getBatteryConsumption());
 			currBattery -= this.currNode.getBatteryConsumption();
 
 			ifLowBtrGoChargingNBack(this.currBattery); //only check battery when cleaning
 
 			vacuumBag.add(new Pair<Integer, TileType>(1, this.currNode.getSurfaceType()));
 			checkBagSize();
+		}
+		
+		// check if the map is completely visited and cleaned, if so move to nearest charging station
+		if (checkMapCleaningComplete()) {
+			//TODO Code below is correct, do not erase
+			FloorTile closest = this.getClosestCharging();
+			if (closest != null) {
+				int x = closest.get_x();
+				int y = closest.get_y();
+				System.out.println("***************");
+				System.out.println("CLEANING IS COMPLETE.");
+				System.out.println("***************");
+				System.out.printf("The closest charging station locates in (%d, %d).\n", x, y);
+				int[] dest = new int[] {this.headingTowards, closest.get_x(), closest.get_y()};
+				
+				move2ALocation(dest);
+			}
 		}
 	}
 
@@ -446,7 +469,7 @@ public class Cleaner {
 	}
 
 	public String printCoordinate() {
-		return String.format("( %d , %d )", this.currNode._x ,this.currNode._y);
+		return String.format("( %d , %d )", this.currNode._y ,this.currNode._x);
 	}
 
 	public void changeHeading(char h){

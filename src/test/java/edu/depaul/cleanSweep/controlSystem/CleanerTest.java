@@ -21,8 +21,12 @@ class CleanerTest {
 
 	@Test
 	void DirtIntake_DoesNotMaxCapacity() throws IOException{
+
+		CustomLinkedList test = new CustomLinkedList();
+		test.insertTile(0, 0, 10, true,  false,  2);
+		
 		Cleaner cleaner = new Cleaner();
-		cleaner.setCurrNode(new FloorTile(0,0,10,TileType.LOWPILE)); // adjust only for the new added print{} in cleanSerface().
+		cleaner.setSensorMap(test);// adjust only for the new added print{} in cleanSerface().
 
 		assertEquals(10, cleaner.getCurrNode().getUnitsOfDirt());
 		assertEquals(0, cleaner.getCurrentBagSize());
@@ -35,11 +39,22 @@ class CleanerTest {
 
 	@Test
 	void DirtIntake_PerfectlyMaxCapacity() throws IOException{
+		CustomLinkedList test = new CustomLinkedList();
+		test.insertTile(0, 0, 10, true,  false,  2);
+		
 		Cleaner cleaner = new Cleaner();
-		cleaner.setCurrNode(new FloorTile(0,0,10,TileType.LOWPILE)); 
-		// adjust only for the new added print{} in cleanSerface().
+		
+		// add 50 nodes
 		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
-			cleaner.setCurrNode(new FloorTile(0,i,10,TileType.BARE));
+			test.insertTile(0, i, 10, true,  false,  1);
+		}
+		
+		cleaner.setSensorMap(test);
+		
+		// move 50 nodes and clean each once
+		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
+			cleaner.changeHeading('E');
+			cleaner.moveAhead();
 			cleaner.cleanSurface();
 			assertEquals(9, cleaner.getCurrNode().getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
@@ -61,18 +76,27 @@ class CleanerTest {
 	// todo - remove unit test once/if ui is written
 	@Test
 	void CapacityNotifications_NotifiesWhenFull() throws IOException{
+		CustomLinkedList test = new CustomLinkedList();
+		test.insertTile(0, 0, 10, true,  false,  2);
+		
 		Cleaner cleaner = new Cleaner();
-		cleaner.setCurrNode(new FloorTile(0,0,10,TileType.LOWPILE)); 
-		// adjust only for the new added print{} in cleanSerface().
-		for(int i: IntStream.range(1, 50).boxed().collect(Collectors.toList())){
-			cleaner.setCurrNode(new FloorTile(0,i,10,TileType.BARE));
+		
+		// add 50 nodes
+		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
+			test.insertTile(0, i, 10, true,  false,  1);
+		}
+		
+		cleaner.setSensorMap(test);
+		
+		// move 50 nodes and clean each once
+		for(int i: IntStream.range(1, 51).boxed().collect(Collectors.toList())){
+			cleaner.changeHeading('E');
+			cleaner.moveAhead();
 			cleaner.cleanSurface();
 			assertEquals(9, cleaner.getCurrNode().getUnitsOfDirt());
 			assertEquals(i, cleaner.getCurrentBagSize());
 		}
-
-		cleaner.setCurrNode(new FloorTile(0,0,10,TileType.BARE));
-		cleaner.cleanSurface();
+		
 		String string1 = new String("The Clean Sweep is out of space for dirt!");
 		String string2 = cleaner.getCleanerStatus();
 		assertEquals(string1, string2);
@@ -294,15 +318,15 @@ class CleanerTest {
 		System.out.println("\nCleanerCleaningResultsInBatteryConsumptionTest");
 
 		CustomLinkedList test = new CustomLinkedList();
-		test.insertTile(0, 0, 1, true,  false,  1);
-		test.insertTile(0, 1, 1, true,  false,  2);
-		test.insertTile(1, 0, 1, true,  false,  3);
-		test.insertTile(1, 1, 1, true,  false,  2);
+		test.insertTile(0, 0, 5, true,  false,  1);
+		test.insertTile(0, 1, 5, true,  false,  2);
+		test.insertTile(1, 0, 5, true,  false,  3);
+		test.insertTile(1, 1, 5, true,  false,  2);
 
 		Cleaner cleaner = new Cleaner();
 
 		//move ahead
-		cleaner.setCurrNode(test.getHead());
+		cleaner.setSensorMap(test);
 		cleaner.changeHeading('E');
 		System.out.println("cleaner is towards east");
 		System.out.println("current location\n" + cleaner.printCoordinate());
@@ -328,7 +352,7 @@ class CleanerTest {
 		assertEquals(0, cleaner.getCurrNode().get_y());
 		assertEquals(244.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface();
-		assertEquals(244.00, cleaner.getCurrBattery());
+		assertEquals(243.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move left
@@ -336,9 +360,9 @@ class CleanerTest {
 		cleaner.moveLeft();
 		assertEquals(0, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(242.00, cleaner.getCurrBattery());
+		assertEquals(241.00, cleaner.getCurrBattery());
 		cleaner.cleanSurface();
-		assertEquals(239.00, cleaner.getCurrBattery());
+		assertEquals(238.00, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 
 		//move right
@@ -349,9 +373,9 @@ class CleanerTest {
 		cleaner.moveRight();
 		assertEquals(1, cleaner.getCurrNode().get_x());
 		assertEquals(1, cleaner.getCurrNode().get_y());
-		assertEquals(236.50, cleaner.getCurrBattery());
+		assertEquals(235.50, cleaner.getCurrBattery());
 		cleaner.cleanSurface();
-		assertEquals(234.50, cleaner.getCurrBattery());
+		assertEquals(233.50, cleaner.getCurrBattery());
 		cleaner.printCoordinate();
 	}
 
@@ -368,7 +392,7 @@ class CleanerTest {
 		Cleaner cleaner = new Cleaner();
 
 		//move ahead
-		cleaner.setCurrNode(test.getHead());
+		cleaner.setSensorMap(test);
 		cleaner.changeHeading('E');
 		System.out.println("cleaner is towards east");
 		System.out.println("current location\n" + cleaner.printCoordinate());

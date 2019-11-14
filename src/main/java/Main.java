@@ -31,7 +31,7 @@ public class Main{
 		test.insertTile(2, 0, 3, true,  false,  1);
 		test.insertTile(2, 1, 1, true,  false,  1);
 		test.insertTile(2, 2, 3, true,  false,  2);
-		test.insertTile(2, 3, 1, true,  true,  1);
+		test.insertTile(2, 3, 0, true,  true,  1);
 		test.insertTile(2, 4, 1, true,  false,  3);
 
 		test.insertTile(3, 0, 1, true,  false,  1);
@@ -41,13 +41,14 @@ public class Main{
 		test.insertTile(3, 4, 2, true,  false,  1);
 
 		Cleaner cleaner = new Cleaner();
-		cleaner.setCurrNode(test.getHead());
+		cleaner.setSensorMap(test);
 		System.out.println("Hello! My start point is " + cleaner.printCoordinate());
 		cleaner.fillChargingStations(test);
 		cleaner.setCurrBattery(70);
 		cleaner.setCurrDirtCapacity(40);
 		
 		cleaner.changeHeading('E');
+		cleaner.cleanSurface();	
 		cleaner.moveAhead();
 		
 		while(!cleaner.getCurrNode().getClean()) {
