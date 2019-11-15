@@ -606,7 +606,7 @@ class CleanerTest {
 		
 		cleaner.changeHeading('E');
 		
-		for(int i: IntStream.range(0, 4).boxed().collect(Collectors.toList())){
+		for(int i: IntStream.range(0, 3).boxed().collect(Collectors.toList())){
 			cleaner.moveAhead();
 			cleaner.cleanSurface();
 		}
@@ -631,7 +631,7 @@ class CleanerTest {
 		
 		cleaner.changeHeading('E');
 		
-		for(int i: IntStream.range(0, 4).boxed().collect(Collectors.toList())){
+		for(int i: IntStream.range(0, 3).boxed().collect(Collectors.toList())){
 			cleaner.moveAhead();
 			assertEquals(i + 1, cleaner.getCurrNode().get_x());
 			cleaner.cleanSurface();
