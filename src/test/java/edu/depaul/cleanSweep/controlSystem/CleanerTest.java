@@ -603,6 +603,7 @@ class CleanerTest {
 
 		Cleaner cleaner = new Cleaner();
 		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
 		
 		cleaner.changeHeading('E');
 		
