@@ -606,7 +606,7 @@ class CleanerTest {
 		
 		cleaner.changeHeading('E');
 		
-		for (int i = 0; i < 4; i++) {
+		for(int i: IntStream.range(0, 4).boxed().collect(Collectors.toList())){
 			cleaner.moveAhead();
 			cleaner.cleanSurface();
 		}
@@ -620,9 +620,9 @@ class CleanerTest {
 
 		CustomLinkedList test = new CustomLinkedList();
 		//Note: the 1st argument of insetTile() is y.
-		test.insertTile(0, 0, 1, true,  true,  1);
+		test.insertTile(0, 0, 0, true,  true,  1);
 		test.insertTile(0, 1, 1, true,  false,  1);
-		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 2, 1, true,  false,  1);
 		test.insertTile(0, 3, 1, true,  false,  1);
 		test.insertTile(0, 4, 1, true,  false,  1);
 
@@ -631,9 +631,9 @@ class CleanerTest {
 		
 		cleaner.changeHeading('E');
 		
-		for (int i = 0; i < 4; i++) {
+		for(int i: IntStream.range(0, 4).boxed().collect(Collectors.toList())){
 			cleaner.moveAhead();
-			assertEquals(i, cleaner.getCurrNode().get_x());
+			assertEquals(i + 1, cleaner.getCurrNode().get_x());
 			cleaner.cleanSurface();
 		}
 
