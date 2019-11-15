@@ -42,6 +42,10 @@ public class Cleaner {
 	}
 	
 	// getters/setters
+	public boolean getCleaningComplete() {
+		return cleaningComplete;
+	}
+	
 	public double getCurrBattery() {
 		return currBattery;
 	}
@@ -435,6 +439,7 @@ public class Cleaner {
 		// check if the map is completely visited and cleaned, if so move to nearest charging station
 		if (checkMapCleaningComplete()) {
 			//TODO Code below is correct, do not erase
+			cleaningComplete = true;
 			FloorTile closest = this.getClosestCharging();
 			if (closest != null) {
 				int x = closest.get_x();
