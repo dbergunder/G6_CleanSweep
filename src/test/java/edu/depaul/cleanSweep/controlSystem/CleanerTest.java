@@ -588,4 +588,56 @@ class CleanerTest {
             }
         }
 	}
+	
+	@Test
+	void CleanerCanDetermineIfFloorplanCleaningCompleteTest() throws IOException {
+		System.out.println("\nTest if the cleaner can determine that cleaning is complete.");
+
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 0, true,  true,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 1, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+		test.insertTile(0, 4, 1, true,  false,  1);
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		
+		cleaner.changeHeading('E');
+		
+		for (int i = 0; i < 4; i++) {
+			cleaner.moveAhead();
+			cleaner.cleanSurface();
+		}
+		
+		assertEquals(true, cleaner.getCleaningComplete());
+	}
+	
+	@Test
+	void CleanerReturnsToChargingStationIfFloorplanCleaningCompleteTest() throws IOException {
+		System.out.println("\nTest if the cleaner can move back to charging station once cleaning is complete.");
+
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 1, true,  true,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+		test.insertTile(0, 4, 1, true,  false,  1);
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		
+		cleaner.changeHeading('E');
+		
+		for (int i = 0; i < 4; i++) {
+			cleaner.moveAhead();
+			assertEquals(i, cleaner.getCurrNode().get_x());
+			cleaner.cleanSurface();
+		}
+
+		assertEquals(cleaner.getSensorMap().getHead(), cleaner.getCurrNode());
+		assertEquals(true, cleaner.getCurrNode().getChargeStation());
+	}
 }

@@ -42,6 +42,10 @@ public class Cleaner {
 	}
 	
 	// getters/setters
+	public boolean getCleaningComplete() {
+		return cleaningComplete;
+	}
+	
 	public double getCurrBattery() {
 		return currBattery;
 	}
