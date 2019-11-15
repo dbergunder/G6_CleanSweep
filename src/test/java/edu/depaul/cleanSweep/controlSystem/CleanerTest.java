@@ -606,10 +606,25 @@ class CleanerTest {
 		
 		cleaner.changeHeading('E');
 		
-		for(int i: IntStream.range(0, 3).boxed().collect(Collectors.toList())){
-			cleaner.moveAhead();
-			cleaner.cleanSurface();
-		}
+		cleaner.moveAhead();
+		assertEquals(1, cleaner.getCurrNode().get_x());
+		assertEquals(0, cleaner.getCurrNode().get_y());
+		cleaner.cleanSurface();
+		
+		cleaner.moveAhead();
+		assertEquals(2, cleaner.getCurrNode().get_x());
+		assertEquals(0, cleaner.getCurrNode().get_y());
+		cleaner.cleanSurface();
+		
+		cleaner.moveAhead();
+		assertEquals(3, cleaner.getCurrNode().get_x());
+		assertEquals(0, cleaner.getCurrNode().get_y());
+		cleaner.cleanSurface();
+		
+		cleaner.moveAhead();
+		assertEquals(4, cleaner.getCurrNode().get_x());
+		assertEquals(0, cleaner.getCurrNode().get_y());
+		cleaner.cleanSurface();
 		
 		assertEquals(true, cleaner.getCleaningComplete());
 	}
@@ -628,10 +643,11 @@ class CleanerTest {
 
 		Cleaner cleaner = new Cleaner();
 		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
 		
 		cleaner.changeHeading('E');
 		
-		for(int i: IntStream.range(0, 3).boxed().collect(Collectors.toList())){
+		for(int i: IntStream.range(0, 4).boxed().collect(Collectors.toList())){
 			cleaner.moveAhead();
 			assertEquals(i + 1, cleaner.getCurrNode().get_x());
 			cleaner.cleanSurface();
