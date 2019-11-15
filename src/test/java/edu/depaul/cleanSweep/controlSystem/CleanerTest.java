@@ -685,5 +685,13 @@ class CleanerTest {
 		System.out.printf("move to north-west: from (2, 2) to (0, 0)");
 		assertEquals(cleaner.getCleanerStatus(), "Blocked");
 		assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
+		
+		cleaner.setCleanerStatus("reset");
+		
+		cleaner.moveToLocation_UsingStack(0, 0);
+		System.out.printf("move to north-west: from (2, 2) to (0, 0)");
+		assertEquals(cleaner.getCleanerStatus(), "Blocked");
+		assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
+	
 	}
 }
