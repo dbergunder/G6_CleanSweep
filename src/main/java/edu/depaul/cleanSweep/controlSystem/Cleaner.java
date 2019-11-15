@@ -320,7 +320,7 @@ public class Cleaner {
 		if ((this.prevNode != null) &&  (this.currNode != null)) {
 			averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-			pcl.logPowerUsed("Movement", prevNode, currNode, currBattery, averagePowerCost);
+			pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost);
 			this.currBattery -= averagePowerCost;
 		}
 
