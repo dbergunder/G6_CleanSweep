@@ -184,29 +184,7 @@ public class Cleaner {
 		return new int[] {ch, ax, ay};
 	}
 
-	//does not consider the original heading towards
-	public void move2Adjacent(int bx, int by) {
-		//totally copy from above
-		if(this.getCurrNode().get_x() < bx) {
-			this.changeHeading('E');
-		}
-		if(this.getCurrNode().get_x() > bx) {
-			this.changeHeading('W');
-		}
-		while(this.getCurrNode().get_x() != bx) {
-			moveAhead();
-		}
 
-		if(this.getCurrNode().get_y() < by) {
-			this.changeHeading('S');
-		}
-		if(this.getCurrNode().get_y() > by) {
-			this.changeHeading('N');
-		}
-		while(this.getCurrNode().get_y() != by) {
-			moveAhead();
-		}
-	}
 
 	private FloorTile findMinF(List<FloorTile> list) {
 		int min = list.get(0).F;
@@ -316,7 +294,7 @@ public class Cleaner {
 		List<FloorTile> path = reversePath(map);
 		int index = 1;
 		while(index < path.size()) {
-			move2Adjacent(path.get(index)._x, path.get(index)._y);
+			move2ALocation(new int[] {this.headingTowards, path.get(index)._x, path.get(index)._y});
 			index = index + 1;
 		}
 		return path;
@@ -326,7 +304,7 @@ public class Cleaner {
 		int len = path.size();
 		int index = len - 2;
 		while(index >= 0) {
-			move2Adjacent(path.get(index)._x, path.get(index)._y);
+			move2ALocation(new int[] {this.headingTowards,path.get(index)._x, path.get(index)._y});
 			//System.out.println("go back "+path.get(index)._x+" "+path.get(index)._y);
 			index = index - 1;
 		}

@@ -641,11 +641,11 @@ class CleanerTest {
 		Therefore, it uses 6 units of battery.
 		*/
 
-		cleaner.move2Adjacent(1,0);
-		cleaner.move2Adjacent(1,1);
-		cleaner.move2Adjacent(2,1);
-		cleaner.move2Adjacent(3,1);
-		cleaner.move2Adjacent(3,2);
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,1,0});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,1,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,2,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,3,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,3,2});
 		assertEquals(50 - 6 + 1, cleaner.getCurrBattery()); 
 		//now the position is adjacent of charging station (3, 2).
 		//if go to station, the battery will be full.
@@ -686,8 +686,8 @@ class CleanerTest {
 		cleaner.fillChargingStations(test);
 		cleaner.setCurrNode(test.returnNode(0, 0)); //start point
 
-		cleaner.move2Adjacent(0, 1);
-		cleaner.move2Adjacent(0, 2);
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 2});
 		List<FloorTile> path = cleaner.go2ChargingStation();
 		assertEquals(test.returnNode(3, 3), cleaner.getCurrNode());
 		
