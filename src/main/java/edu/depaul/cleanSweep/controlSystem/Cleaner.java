@@ -6,7 +6,6 @@ import edu.depaul.cleanSweep.floorPlan.*;
 import org.javatuples.Pair;
 import java.util.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Cleaner {
 	// variables related to battery consumption
@@ -32,6 +31,9 @@ public class Cleaner {
 	private CustomLinkedList sensorMap = null; // the cleaner stores it's own sensor map for checking completion
 	private boolean cleaningComplete; //the cleaner can check if the map is complete
 
+	private boolean isOnTheWay2Charging = false;
+
+
 	// constructor
 	public Cleaner() throws IOException{
 		sensorMap = new CustomLinkedList();
@@ -40,7 +42,7 @@ public class Cleaner {
 		currBattery = MAX_BATTERY_POWER;
 		currDirtCapacity = MAX_DIRT_CAPACITY;
 	}
-	
+
 	// getters/setters
 	public boolean getCleaningComplete() {
 		return cleaningComplete;
@@ -49,7 +51,7 @@ public class Cleaner {
 	public double getCurrBattery() {
 		return currBattery;
 	}
-	
+
 	public void setCurrBattery(double cb) {
 		currBattery = cb;
 	}
@@ -67,12 +69,12 @@ public class Cleaner {
 		this.currentMap[n.get_x()][n.get_y()] = copyFloorTile(n);
 		cleanerHistory.add(n);
 	}
-	
+
 	public CustomLinkedList getSensorMap() {
 		//method used to retrieve private sensor map
 		return this.sensorMap;
 	}
-	
+
 	public void setSensorMap(CustomLinkedList testMap) {
 		//method used to set a sensor map to the cleaner, useful for setting custom maps in tests
 		this.sensorMap = testMap;
@@ -90,15 +92,15 @@ public class Cleaner {
 	public String getCleanerStatus () {
 		return currStatus;
 	}
-	
+
 	// check if map is completely cleaned and visited
 	private boolean checkMapCleaningComplete() {
 		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
 		FloorTile currSensorNode = this.sensorMap.getHead(); // get sensor map head
 		boolean loopCheck = true; // loop checker to determine if all information is correct
-		
+
 		// check for nulls?
-		
+
 		while(currSensorNode != null) { // loop through the sensorNodes (Y-Axis)
 			if (currSensorNode.get_y()%2 == 0) { // depending of row number move east if even, move west if odd 
 				while(currSensorNode.east != null) { // loop through the sensorNodes (X-Axis) east if row is even
@@ -119,18 +121,18 @@ public class Cleaner {
 				}
 				loopCheck = checkNodeCleanAndVisited(currSensorNode);
 			}
-			
+
 			if (!loopCheck) {
 				break;
 			}
-			
+
 			if (currSensorNode.south != null) { // after looping all the way east/west then move south 1 row if not empty
 				currSensorNode = currSensorNode.south;
 			} else {
 				break;
 			}
 		}
-		
+
 		return loopCheck;
 	}
 
@@ -143,7 +145,7 @@ public class Cleaner {
 				visitedAndCleaned = true;
 			}
 		}
-		
+
 		return visitedAndCleaned;
 	}
 
@@ -153,7 +155,7 @@ public class Cleaner {
 		int ax = locationLeft.get_x();
 		int ay = locationLeft.get_y();
 		char ch = this.headingTowards;
-		
+
 		int bx = dest[1];
 		int by = dest[2];
 
@@ -181,8 +183,158 @@ public class Cleaner {
 		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
-	
-	
+
+	//does not consider the original heading towards
+	public void move2Adjacent(int bx, int by) {
+		//totally copy from above
+		if(this.getCurrNode().get_x() < bx) {
+			this.changeHeading('E');
+		}
+		if(this.getCurrNode().get_x() > bx) {
+			this.changeHeading('W');
+		}
+		while(this.getCurrNode().get_x() != bx) {
+			moveAhead();
+		}
+
+		if(this.getCurrNode().get_y() < by) {
+			this.changeHeading('S');
+		}
+		if(this.getCurrNode().get_y() > by) {
+			this.changeHeading('N');
+		}
+		while(this.getCurrNode().get_y() != by) {
+			moveAhead();
+		}
+	}
+
+	private FloorTile findMinF(List<FloorTile> list) {
+		int min = list.get(0).F;
+		FloorTile minHolder = list.get(0);
+		for (FloorTile ft : list) {
+			if(ft.F < min) {
+				min = ft.F;
+				minHolder = ft;
+
+			}
+		}
+		return minHolder;
+	}
+
+	public List<FloorTile> getTheMinPath(FloorTile target) {
+		List<FloorTile> openList = new ArrayList<>();
+		List<FloorTile> closeList = new ArrayList<>();
+		FloorTile index = this.currNode;
+		index.G = 0;
+		index.H = -1;
+		index.F = -1;
+		index.parent = index;
+		openList.add(index);
+		while(!openList.isEmpty()) {
+			index = findMinF(openList);
+			//	System.out.println("\n"+index._x+" *** "+index._y);
+			closeList.add(index);
+			openList.remove(openList.indexOf(index));
+			List<FloorTile> neighbors = getUnnullNeighbors(sensorMap.returnNode(index._x,index._y));
+			for (FloorTile neighbor: neighbors) {
+				if(neighbor.getAccessable() && !closeList.contains(neighbor)){
+					if(openList.contains(neighbor)) {
+						if((index.G + 10) < neighbor.G) {
+							neighbor.G = index.G + 10;
+							neighbor.F = neighbor.G + neighbor.H;
+							neighbor.parent = index;
+
+						}
+						continue;
+					}
+
+					neighbor.G = index.G + 10;
+					neighbor.H = (int) (getDistance(neighbor._x, neighbor._y, target._x, target._y)) * 10;
+					neighbor.F = neighbor.G + neighbor.H;
+					neighbor.parent = index;
+					openList.add(neighbor);
+					if(openList.contains(target)) {
+						closeList.add(neighbor);
+						return closeList;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
+	private List<FloorTile> getUnnullNeighbors(FloorTile ft){
+		List<FloorTile> list = new ArrayList<>();
+		if(ft.east != null) {
+			list.add(ft.east);
+		}
+		if(ft.west != null) {
+			list.add(ft.west);
+		}
+		if(ft.north != null) {
+			list.add(ft.north);
+		}
+		if(ft.south!= null) {
+			list.add(ft.south);
+		}
+		return list;
+	}
+
+	public List<FloorTile> reversePath(List<FloorTile> list){
+		List<FloorTile> path = new ArrayList<>();
+		FloorTile tmp = list.get((list.size() - 1));
+		while(!path.contains(list.get(0))) {
+			path.add(0, tmp);
+			tmp = tmp.parent;
+		}
+		return path;
+	}
+
+	public double calculateUnit() {
+		FloorTile cs = getClosestCharging();
+		List<FloorTile> map = getTheMinPath(cs);//the list returned from getTheMinPath()
+		System.out.println("\n"+map.get(0));
+		FloorTile index = map.get(map.size() - 1) ;
+		//the end of list is start point.
+		double unitNum = 0;
+		while(index != map.get(0)) {
+			//averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
+			unitNum = unitNum + ((index.getBatteryConsumption() + index.parent.getBatteryConsumption()) / 2);
+			index = index.parent;	
+		}		
+		return unitNum;
+	}
+
+	public List<FloorTile> go2ChargingStation() {
+		isOnTheWay2Charging = true;
+		FloorTile cs = getClosestCharging();
+		System.out.println("-------------------------------------");
+		System.out.println("Position of Charging Station: (" + cs._x + ", " + cs._y + ")");
+		System.out.println("-------------------------------------");
+		List<FloorTile> map = getTheMinPath(cs);
+		List<FloorTile> path = reversePath(map);
+		int index = 1;
+		while(index < path.size()) {
+			move2Adjacent(path.get(index)._x, path.get(index)._y);
+			index = index + 1;
+		}
+		return path;
+	}
+
+	public void goBack2whereLeft(List<FloorTile> path) {
+		int len = path.size();
+		int index = len - 2;
+		while(index >= 0) {
+			move2Adjacent(path.get(index)._x, path.get(index)._y);
+			//System.out.println("go back "+path.get(index)._x+" "+path.get(index)._y);
+			index = index - 1;
+		}
+	}
+
+
+
+
 	// for navigating away from obsticles
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
@@ -232,7 +384,7 @@ public class Cleaner {
 
 	private List<FloorTile> getNeighboringNodes(FloorTile node){
 		return new ArrayList<FloorTile>(
-				Arrays.asList(new FloorTile[]{node.north, node.south, node.east, node.west}));
+				Arrays.asList(new FloorTile[]{node.west, node.north, node.south, node.east}));
 	}
 
 	public FloorTile getClosestCharging() {
@@ -256,6 +408,9 @@ public class Cleaner {
 		return Math.sqrt((x-bx)*(x-bx)+(y-by)*(y-by));
 	}
 
+	private double getDistance(int x, int y, int dx, int dy) {
+		return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));
+	}
 
 
 	public void fillChargingStations(CustomLinkedList path) {
@@ -295,17 +450,19 @@ public class Cleaner {
 			}
 			break;
 		}
-		
+
 		currentMap[this.currNode._x][this.currNode._y] = copyFloorTile(this.currNode); // copy sensor node to the cleaner's map
 		cleanerHistory.add(this.currNode); // add the sensor node to the cleaner's history
-		
+
 		System.out.println("Moving to " + printCoordinate());
-		
+
 		// get average battery cost, log it, and subtract from battery total
 		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 		pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost, headingTowards);
 		this.currBattery -= averagePowerCost;
 
+		
+		//	affects many tests.
 
 		if (this.currNode.getChargeStation()) {
 			this.currBattery = MAX_BATTERY_POWER;
@@ -318,28 +475,37 @@ public class Cleaner {
 			System.out.println("************************");
 			pcl.logData("Charging", prevNode, currNode, currBattery, 0, headingTowards);
 		}
+		if(isOnTheWay2Charging == false && !this.currNode.getChargeStation()) {
+			ifLowBtrGoChargingNBack();
+		}
 
 		return flag;
 	}
 
-	public void ifLowBtrGoChargingNBack(double currBattery) {
-		if(currBattery <= this.lowBatteryThreshold) {
-			FloorTile closest = this.getClosestCharging();
-			int x = closest.get_x();
-			int y = closest.get_y();
-			System.out.println("***************");
-			System.out.println("Battery is low.");
-			System.out.println("***************");
-			System.out.printf("The closest charging station locates in (%d, %d).\n", x, y);
-			int[] dest = new int[] {this.headingTowards, closest.get_x(), closest.get_y()};
-			
-			int[] abc = move2ALocation(dest);
-			
-			move2ALocation(abc);
+	public void ifLowBtrGoChargingNBack() {
+		if(!chargingStations.isEmpty()) {
+			double threshold = this.calculateUnit();
+			if(currBattery <= threshold) {
+				isOnTheWay2Charging = true;
+				System.out.println("***************");
+				System.out.println("Battery is low.");
+				System.out.println("***************");
+				char heading = this.headingTowards;
+
+				List<FloorTile> path = go2ChargingStation();
+
+				goBack2whereLeft(path);
+				this.headingTowards = heading;
+
+				System.out.println("*********************");
+				System.out.println("Back to where I left.");
+				System.out.println("*********************");
+				isOnTheWay2Charging = false;
+			}
 		}
 	}
 
-	
+
 	//For moving left, right or back, the heading direction will change correspondingly, and then move forward.
 	public void moveLeft() {
 		switch(this.headingTowards) {
@@ -418,7 +584,7 @@ public class Cleaner {
 
 		// Cell is not clean, clean it, update bag, and change cell state
 		Integer spaceLeft = MAX_DIRT_CAPACITY - getCurrentBagSize();
-		
+
 		// Check for space
 		if(spaceLeft <= 0 || atCapacity) {
 			// Can't hold any more. Do not clean cell
@@ -430,12 +596,12 @@ public class Cleaner {
 			pcl.logData("Cleaning", currNode, currNode, currBattery, currNode.getBatteryConsumption());
 			currBattery -= currNode.getBatteryConsumption();
 
-			ifLowBtrGoChargingNBack(this.currBattery); //only check battery when cleaning
+			ifLowBtrGoChargingNBack(); //only check battery when cleaning
 
 			vacuumBag.add(new Pair<Integer, TileType>(1, this.currNode.getSurfaceType()));
 			checkBagSize();
 		}
-		
+
 		// check if the map is completely visited and cleaned, if so move to nearest charging station
 		if (checkMapCleaningComplete()) {
 			//TODO Code below is correct, do not erase
@@ -449,7 +615,7 @@ public class Cleaner {
 				System.out.println("***************");
 				System.out.printf("The closest charging station locates in (%d, %d).\n", x, y);
 				int[] dest = new int[] {this.headingTowards, closest.get_x(), closest.get_y()};
-				
+
 				move2ALocation(dest);
 			}
 		}
@@ -474,7 +640,7 @@ public class Cleaner {
 	}
 
 	public String printCoordinate() {
-		return String.format("( %d , %d )", this.currNode._y ,this.currNode._x);
+		return String.format("( %d , %d )", this.currNode._x ,this.currNode._y);
 	}
 
 	public void changeHeading(char h){
