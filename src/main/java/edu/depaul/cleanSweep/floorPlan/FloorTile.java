@@ -16,6 +16,12 @@ public class FloorTile implements Serializable {
 	public FloorTile west;
 	public int _x;
 	public int _y;
+	
+	public int G;
+	public int H;
+	public int F;
+	public FloorTile parent;
+	
 	TileType surfaceType;
 	boolean isClean;
 	boolean accessable;
