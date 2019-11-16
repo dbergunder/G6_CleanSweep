@@ -678,7 +678,7 @@ class CleanerTest {
 		CustomLinkedList floorPlan = new CustomLinkedList();
 
 		floorPlan.createFloorFromXML(new File("files/SamplePlanWithAttributesBlocked.xml"));
-        floorPlan.printList();
+		floorPlan.printList();
 		cleaner.setCurrNode(floorPlan.returnNode(2, 2));
 		
 		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 0});
