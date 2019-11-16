@@ -12,6 +12,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -495,6 +497,210 @@ class CleanerTest {
 
 	}
 
+	
+	@Test
+	void getTheMinPathTest() throws IOException {
+		System.out.println("\nTest the map to a spacific position when obstacles exit");
+
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 1, true,  false,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+
+		test.insertTile(1, 0, 1, true,  false,  1);
+		test.insertTile(1, 1, 0, true,  false,  1);
+		test.insertTile(1, 2, 1, true,  false,  1);
+		test.insertTile(1, 3, 2, true,  false,  1);
+
+		test.insertTile(2, 0, 1, true,  false,  1);
+		test.insertTile(2, 1, 1, true,  false,  1);
+		test.insertTile(2, 2, 3, false,  false,  1); //obstacle
+		test.insertTile(2, 3, 1, true,  false,  1);
+
+		test.insertTile(3, 0, 1, true,  false,  1);
+		test.insertTile(3, 1, 1, true,  false,  1);
+		test.insertTile(3, 2, 1, true,  false,  1);
+		test.insertTile(3, 3, 2, true,  true,  1);
+
+		assertTrue(test.getChargingList().contains(test.returnNode(3, 3)));
+		assertTrue(test.getChargingList().size() == 1);
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
+		cleaner.setCurrNode(test.returnNode(0, 0)); //start point
+		FloorTile cc = cleaner.getClosestCharging();
+		System.out.printf("The closest charging station is (%d, %d).", cc.get_x(), cc.get_y());
+		List<FloorTile> map = cleaner.getTheMinPath(cc);
+		for(FloorTile ft: map) {
+			System.out.println(ft._x+" "+ft._y+" "+ft.G+" "+ft.H+" "+ft.F+" "+ft.parent._x+" "+ft.parent._y);
+		}
+		assertTrue(map.contains(cc));
+		assertTrue(!map.contains(test.returnNode(2, 2))); // do not contain obstacles
+		FloorTile tmp = cc;
+		while(tmp != test.returnNode(0, 0)) {
+			tmp = tmp.parent;
+		}
+		assertEquals(tmp, test.returnNode(0, 0)); // can reverse to start point
+	}
+
+	
+	@Test
+	void reversePathTest() throws IOException {
+		System.out.println("\nTest the reversePath method can obtain a correct path from Min map");
+		//based on the list returned by getTheMinPath(), 
+		//reversePath() gets the path from start points to destination(closest charging station)
+		
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 1, true,  false,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+
+		test.insertTile(1, 0, 1, true,  false,  1);
+		test.insertTile(1, 1, 0, true,  false,  1);
+		test.insertTile(1, 2, 1, true,  false,  1);
+		test.insertTile(1, 3, 2, true,  false,  1);
+
+		test.insertTile(2, 0, 1, true,  false,  1);
+		test.insertTile(2, 1, 1, true,  false,  1);
+		test.insertTile(2, 2, 3, false,  false,  1); //obstacle
+		test.insertTile(2, 3, 1, true,  false,  1);
+
+		test.insertTile(3, 0, 1, true,  false,  1);
+		test.insertTile(3, 1, 1, true,  false,  1);
+		test.insertTile(3, 2, 1, true,  false,  1);
+		test.insertTile(3, 3, 2, true,  true,  1);
+
+		assertTrue(test.getChargingList().contains(test.returnNode(3, 3)));
+		assertTrue(test.getChargingList().size() == 1);
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
+		cleaner.setCurrNode(test.returnNode(0, 0)); //start point
+		FloorTile cc = cleaner.getClosestCharging();
+		List<FloorTile> map = cleaner.getTheMinPath(cc);
+		List<FloorTile> path = cleaner.reversePath(map);
+		for(FloorTile ft: path) {
+			System.out.println(ft._x+" "+ft._y+" "+ft.G+" "+ft.H+" "+ft.F+" "+ft.parent._x+" "+ft.parent._y);
+		}
+		int len = path.size();
+		for(int i = len-1; i > 0; i--) {
+			assertEquals(path.get(i).parent, path.get(i - 1)); // follow the path
+		}
+		assertEquals(path.get(len - 1), cc);
+		assertEquals(path.get(0), test.returnNode(0, 0));
+	}
+	
+	
+	@Test
+	void calculateUnitTest() throws IOException {
+		System.out.println("\nTest if the cleaner is able "
+				+ "to calculate how many battery consumption it needs to go to the closest charging station");
+		//based on the list returned by getTheMinPath(), 
+		
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 1, true,  false,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+
+		test.insertTile(1, 0, 1, true,  false,  1);
+		test.insertTile(1, 1, 0, true,  false,  1);
+		test.insertTile(1, 2, 1, true,  false,  1); 
+		test.insertTile(1, 3, 2, true,  false,  1);
+
+		test.insertTile(2, 0, 1, true,  false,  1);
+		test.insertTile(2, 1, 1, true,  false,  1);
+		test.insertTile(2, 2, 3, true,  false,  1); 
+		test.insertTile(2, 3, 1, true,  false,  1);
+
+		test.insertTile(3, 0, 1, true,  false,  1);
+		test.insertTile(3, 1, 1, true,  false,  1);
+		test.insertTile(3, 2, 1, true,  false,  1);
+		test.insertTile(3, 3, 2, true,  true,  1); //charging station
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
+		
+		
+		cleaner.setCurrNode(test.returnNode(0, 0)); //start point
+		cleaner.setCurrBattery(50); //will use 6 units of power
+		
+		assertEquals(6, cleaner.calculateUnit());
+		/* calculateUnit() obtains the closest charging station itself,
+		at this time, (3, 3).
+		The path will be the same as the above test.
+		(0,0)->(1,0)->(1,1)->(2,1)->(3,1)->(3,2)->(3,3)
+		Therefore, it uses 6 units of battery.
+		*/
+
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,1,0});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,1,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,2,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,3,1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards,3,2});
+		assertEquals(50 - 6 + 1, cleaner.getCurrBattery()); 
+		//now the position is adjacent of charging station (3, 2).
+		//if go to station, the battery will be full.
+		
+	}
+	
+	
+	
+	@Test
+	void go2ChargingStation_and_goBackTest() throws IOException {
+		System.out.println("\nTest if the cleaner can go to station and go back to the position it lefts.");
+		
+		CustomLinkedList test = new CustomLinkedList();
+		//Note: the 1st argument of insetTile() is y.
+		test.insertTile(0, 0, 1, true,  false,  1);
+		test.insertTile(0, 1, 1, true,  false,  1);
+		test.insertTile(0, 2, 2, true,  false,  1);
+		test.insertTile(0, 3, 1, true,  false,  1);
+
+		test.insertTile(1, 0, 1, true,  false,  1);
+		test.insertTile(1, 1, 0, true,  false,  1);
+		test.insertTile(1, 2, 1, true,  false,  1); 
+		test.insertTile(1, 3, 2, true,  false,  1);
+
+		test.insertTile(2, 0, 1, true,  false,  1);
+		test.insertTile(2, 1, 1, true,  false,  1);
+		test.insertTile(2, 2, 3, false,  false,  1);  // obstacle
+		test.insertTile(2, 3, 1, true,  false,  1);
+
+		test.insertTile(3, 0, 1, true,  false,  1);
+		test.insertTile(3, 1, 1, true,  false,  1);
+		test.insertTile(3, 2, 1, true,  false,  1);
+		test.insertTile(3, 3, 2, true,  true,  1); //charging station
+
+
+		Cleaner cleaner = new Cleaner();
+		cleaner.setSensorMap(test);
+		cleaner.fillChargingStations(test);
+		cleaner.setCurrNode(test.returnNode(0, 0)); //start point
+
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 1});
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 2});
+		List<FloorTile> path = cleaner.go2ChargingStation();
+		assertEquals(test.returnNode(3, 3), cleaner.getCurrNode());
+		
+		System.out.println("check the path");
+		for(FloorTile ft: path) {
+			System.out.println(ft._x+" "+ft._y+" "+ft.G+" "+ft.H+" "+ft.F+" "+ft.parent._x+" "+ft.parent._y);
+		}
+		
+		cleaner.goBack2whereLeft(path);
+		assertEquals(test.returnNode(0, 2), cleaner.getCurrNode());
+		//need to set heading towards manually.
+	}
+		
 	@Test
 	void move2ALocationTest() throws IOException {
 		System.out.println("\nTest if the cleaner can move to a specific location.");
@@ -568,7 +774,6 @@ class CleanerTest {
 				new File("files/SamplePlanWithAttributes.xml"));
 
 		floorPlan.printSuccintMap();
-
 //		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
 //		cleaner.moveToLocation_UsingStack(4, 3);
 //		assertEquals(floorPlan.returnNode(4, 3), cleaner.getCurrNode());
