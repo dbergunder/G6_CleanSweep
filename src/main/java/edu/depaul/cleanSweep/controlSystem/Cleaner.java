@@ -208,9 +208,7 @@ public class Cleaner {
 		while(! (currNode._x == targetX && currNode._y == targetY ) ){	
 			wrongNodes.add(currNode);
 			addValidNodes(wrongNodes);
-			System.out.println("This is what is in the valids tile stack " + validTilesStack.toString());
-			if(validTilesStack.isEmpty())
-			{
+			if(validTilesStack.isEmpty()) {
 				currStatus = "Blocked";
 				return;
 			}
