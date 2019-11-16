@@ -91,6 +91,10 @@ public class Cleaner {
 		return currStatus;
 	}
 	
+	public void setCleanerStatus(String newStatus) {
+		currStatus = newStatus;
+	}
+	
 	// check if map is completely cleaned and visited
 	private boolean checkMapCleaningComplete() {
 		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
@@ -201,9 +205,15 @@ public class Cleaner {
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
 
-		while(! (currNode._x == targetX && currNode._y == targetY ) ){
+		while(! (currNode._x == targetX && currNode._y == targetY ) ){	
 			wrongNodes.add(currNode);
 			addValidNodes(wrongNodes);
+			System.out.println("This is what is in the valids tile stack " + validTilesStack.toString());
+			if(validTilesStack.isEmpty())
+			{
+				currStatus = "Blocked";
+				return;
+			}
 			teleportToNode(validTilesStack.pop());
 		}
 	}

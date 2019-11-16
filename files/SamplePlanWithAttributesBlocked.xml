@@ -21,7 +21,7 @@
 		<y>0</y>
 		<x>2</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -149,7 +149,7 @@
 		<y>2</y>
 		<x>0</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -173,7 +173,7 @@
 		<y>2</y>
 		<x>3</x>
 		<surfaceType>2</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -181,7 +181,7 @@
 		<y>2</y>
 		<x>4</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -237,7 +237,7 @@
 		<y>3</y>
 		<x>2</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -309,7 +309,7 @@
 		<y>4</y>
 		<x>2</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
@@ -381,7 +381,7 @@
 		<y>5</y>
 		<x>2</x>
 		<surfaceType>1</surfaceType>
-		<accessible>true</accessible>
+		<accessible>false</accessible>
 		<dirt>1</dirt>
 		<chargingStation>false</chargingStation>
 	</tile>
