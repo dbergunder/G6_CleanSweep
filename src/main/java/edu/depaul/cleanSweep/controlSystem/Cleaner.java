@@ -92,15 +92,12 @@ public class Cleaner {
 	public String getCleanerStatus () {
 		return currStatus;
 	}
-<<<<<<< HEAD
 	
 	public void setCleanerStatus(String newStatus) {
 		currStatus = newStatus;
 	}
 	
-=======
 
->>>>>>> master
 	// check if map is completely cleaned and visited
 	private boolean checkMapCleaningComplete() {
 		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
@@ -163,12 +160,8 @@ public class Cleaner {
 		int ax = locationLeft.get_x();
 		int ay = locationLeft.get_y();
 		char ch = this.headingTowards;
-<<<<<<< HEAD
-		
 		boolean blocked = false;
-=======
 
->>>>>>> master
 		int bx = dest[1];
 		int by = dest[2];
 
