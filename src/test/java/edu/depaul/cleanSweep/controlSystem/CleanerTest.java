@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 class CleanerTest {
 
 	private static final int MAX_DIRT_CAPACITY = 50;
-
 	@Test
 	void DirtIntake_DoesNotMaxCapacity() throws IOException{
 
@@ -875,5 +874,29 @@ class CleanerTest {
 
 		assertEquals(cleaner.getSensorMap().getHead(), cleaner.getCurrNode());
 		assertEquals(true, cleaner.getCurrNode().getChargeStation());
+	}
+	
+	@Test
+	void CleanerBlockedTest() throws IOException, SAXException, ParserConfigurationException {
+		Cleaner cleaner = new Cleaner();
+		System.out.printf("Testing blocking status with a floor plan, that blocks when moving to a location.\n");
+		CustomLinkedList floorPlan = new CustomLinkedList();
+
+		floorPlan.createFloorFromXML(new File("files/SamplePlanWithAttributesBlocked.xml"));
+		floorPlan.printList();
+		cleaner.setCurrNode(floorPlan.returnNode(2, 2));
+		
+		cleaner.move2ALocation(new int[] {cleaner.headingTowards, 0, 0});
+		System.out.printf("move to north-west: from (2, 2) to (0, 0)");
+		assertEquals(cleaner.getCleanerStatus(), "Blocked");
+		assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
+		
+		cleaner.setCleanerStatus("reset");
+		
+		cleaner.moveToLocation_UsingStack(0, 0);
+		System.out.printf("move to north-west: from (2, 2) to (0, 0)");
+		assertEquals(cleaner.getCleanerStatus(), "Blocked");
+		assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
+	
 	}
 }

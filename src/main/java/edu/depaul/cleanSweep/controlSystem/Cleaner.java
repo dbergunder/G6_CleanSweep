@@ -92,6 +92,11 @@ public class Cleaner {
 	public String getCleanerStatus () {
 		return currStatus;
 	}
+	
+	public void setCleanerStatus(String newStatus) {
+		currStatus = newStatus;
+	}
+	
 
 	// check if map is completely cleaned and visited
 	private boolean checkMapCleaningComplete() {
@@ -155,6 +160,7 @@ public class Cleaner {
 		int ax = locationLeft.get_x();
 		int ay = locationLeft.get_y();
 		char ch = this.headingTowards;
+		boolean blocked = false;
 
 		int bx = dest[1];
 		int by = dest[2];
@@ -166,7 +172,12 @@ public class Cleaner {
 			this.changeHeading('W');
 		}
 		while(this.getCurrNode().get_x() != bx) {
-			moveAhead();
+			if (moveAhead() == false)
+			{
+				blocked = true; //We are blocked in the X direction, doesnt mean we are fully blocked yet.
+				break;
+			}
+			System.out.println("^^^^^^^^^heading"+this.getCurrNode().get_x()); //for test
 		}
 
 		if(this.getCurrNode().get_y() < by) {
@@ -176,11 +187,19 @@ public class Cleaner {
 			this.changeHeading('N');
 		}
 		while(this.getCurrNode().get_y() != by) {
-			moveAhead();
+			if (moveAhead() == false)
+			{
+				if (blocked == true)
+				{
+					blocked = true;//both blocked in x and y direction
+					currStatus = "Blocked";
+				}
+				break;
+			}
 		}
 
 		this.changeHeading((char) dest[0]);
-		//System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
+		System.out.println("^^^^^^^^^heading"+(char) dest[0]); //for test
 		return new int[] {ch, ax, ay};
 	}
 
@@ -317,9 +336,13 @@ public class Cleaner {
 	public void moveToLocation_UsingStack(int targetX, int targetY){
 		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
 
-		while(! (currNode._x == targetX && currNode._y == targetY ) ){
+		while(! (currNode._x == targetX && currNode._y == targetY ) ){	
 			wrongNodes.add(currNode);
 			addValidNodes(wrongNodes);
+			if(validTilesStack.isEmpty()) {
+				currStatus = "Blocked";
+				return;
+			}
 			teleportToNode(validTilesStack.pop());
 		}
 	}
@@ -435,13 +458,13 @@ public class Cleaner {
 		System.out.println("Moving to " + printCoordinate());
 
 		// get average battery cost, log it, and subtract from battery total
-		averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
-		pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost, headingTowards);
-		this.currBattery -= averagePowerCost;
+		if ((this.prevNode != null) &&  (this.currNode != null)) {
+			averagePowerCost = (this.prevNode.getBatteryConsumption() + this.currNode.getBatteryConsumption()) / 2;
 
-		
+			pcl.logData("Movement", prevNode, currNode, currBattery, averagePowerCost);
+			this.currBattery -= averagePowerCost;
+		}
 		//	affects many tests.
-
 		if (this.currNode.getChargeStation()) {
 			this.currBattery = MAX_BATTERY_POWER;
 			System.out.println("************************");
