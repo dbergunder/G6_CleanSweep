@@ -38,7 +38,9 @@ public class Main{
 
         List<FloorTile> map = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
 
-        for (FloorTile cell : map) {
+        List<FloorTile> path = cleaner.reversePath(map);
+        
+        for(FloorTile cell: path) {
             cleaner.moveToLocation_UsingStack(cell._x, cell._y);
         }
 
