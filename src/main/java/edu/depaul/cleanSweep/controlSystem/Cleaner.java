@@ -654,4 +654,18 @@ public class Cleaner {
 		FloorTile temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
 		return temp;
 	}
+
+	public String getNotCleanMap(){
+        String s = "";
+        for(int i = 0; i<=8; i++){
+            for(int j = 0; j<=5; j++){
+                if(currentMap[i][j] !=  null && currentMap[i][j].getUnitsOfDirt() == 0)
+                    s += String.format("( %d , %d )", currentMap[i][j]._x ,currentMap[i][j]._y);
+                else
+                    s += "(   ,   )";
+            }
+            s += "\n";
+        }
+        return s;
+    }
 }
