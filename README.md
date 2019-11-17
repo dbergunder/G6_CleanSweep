@@ -22,3 +22,4 @@
 - java version: 1.10
 - Maven
 - Junit version: 5.4
+- Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
