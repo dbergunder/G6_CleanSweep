@@ -94,7 +94,7 @@ public class Cleaner {
 	}
 
 	// check if map is completely cleaned and visited
-	private boolean checkMapCleaningComplete() {
+	public boolean checkMapCleaningComplete() {
 		// this method checks if the sensor map is the same as the current map and that all nodes are cleaned and visited if possible
 		FloorTile currSensorNode = this.sensorMap.getHead(); // get sensor map head
 		boolean loopCheck = true; // loop checker to determine if all information is correct
@@ -327,8 +327,8 @@ public class Cleaner {
 	private void teleportToNode(FloorTile node){
 		this.prevNode = this.currNode;
 		this.currNode = node;
-
-		currentMap[this.currNode._x][this.currNode._y] = copyFloorTile(this.currNode);
+		cleanSurface();
+		currentMap[this.currNode._x][this.currNode._y] = this.currNode;
 		cleanerHistory.add(this.currNode);
 
 		System.out.println("Moving to " + printCoordinate());
@@ -656,17 +656,16 @@ public class Cleaner {
 		return temp;
 	}
 
-	public String getNotCleanMap(){
-        String s = "";
-        for(int i = 0; i<=8; i++){
-            for(int j = 0; j<=5; j++){
-                if(currentMap[i][j] !=  null && currentMap[i][j].getUnitsOfDirt() == 0)
-                    s += String.format("( %d , %d )", currentMap[i][j]._x ,currentMap[i][j]._y);
-                else
-                    s += "(   ,   )";
-            }
-            s += "\n";
-        }
-        return s;
-    }
+
+	public boolean moreCleaningToDo(){
+		for(int i = 0; i<=5; i++){
+			for(int j = 0; j<=8; j++){
+				FloorTile node = currentMap[j][i];
+				if(node!= null && node.getAccessable() && node.getUnitsOfDirt() != 0)
+					return false;
+			}
+		}
+		return true;
+	}
+
 }

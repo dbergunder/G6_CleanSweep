@@ -28,31 +28,17 @@ public class Main{
 
         floorPlan.printSuccintMap();
 
-        while(!cleaner.getCleaningComplete()){
-                List<FloorTile> map = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
-
-                for(FloorTile cell: map) {
-                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
-                }
-
-                System.out.println(cleaner.getCurrentMapString());
-
-                List<FloorTile> reversePath = cleaner.reversePath(map);
-
-                for (FloorTile cell : reversePath) {
-                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
-                }
-
-                System.out.println(cleaner.getCurrentMapString());
-
-                // returning null pointer exception here
-                List<FloorTile> secondMap = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
-
-                for(FloorTile cell: secondMap) {
-                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+        while(!cleaner.moreCleaningToDo()){
+                for(int i = 0; i<=5; i++){
+                        for(int j = 0; j<=8; j++){
+                                if(!floorPlan.returnNode(j, i).getAccessable())
+                                        continue;
+                                cleaner.moveToLocation_UsingStack(j, i);
+                        }
                 }
         }
-
-
-	}
+        System.out.println("***************");
+        System.out.println("CLEANING IS COMPLETE.");
+        System.out.println("***************");
+    }
 }
