@@ -1,19 +1,18 @@
 package edu.depaul.cleanSweep.controlSystem;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import edu.depaul.cleanSweep.floorPlan.FloorTile;
 import edu.depaul.cleanSweep.floorPlan.TileType;
-import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
+import javax.xml.parsers.ParserConfigurationException;
+import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
 class CleanerTest {
 
@@ -804,23 +803,10 @@ class CleanerTest {
 
     floorPlan.convertXMLToCustomLinkedList(new File("files/SamplePlanWithAttributes.xml"));
 
-    floorPlan.printSuccintMap();
-    //		cleaner.setCurrNode(floorPlan.returnNode(0, 0));
-    //		cleaner.moveToLocation_UsingStack(4, 3);
-    //		assertEquals(floorPlan.returnNode(4, 3), cleaner.getCurrNode());
-    //		assertNotNull(cleaner.getCurrentMap()[4][3]);
-
-    System.out.println(cleaner.getCurrentMapString());
-    for (int i = 0; i <= 8; i++) {
-      for (int j = 0; j <= 5; j++) {
-        if (!floorPlan.returnNode(i, j).getAccessable()) continue;
-        System.out.println("Trying to go to: x: " + i + " y: " + j);
-        cleaner.setCurrNode(floorPlan.returnNode(0, 0));
-        cleaner.moveToLocation_UsingStack(i, j);
-        assertEquals(floorPlan.returnNode(i, j), cleaner.getCurrNode());
-        assertNotNull(cleaner.getCurrentMap()[i][j]);
-      }
-    }
+    cleaner.setCurrNode(floorPlan.returnNode(0, 0));
+    cleaner.moveToLocation_UsingStack(8, 2, false);
+    assertEquals(floorPlan.returnNode(8, 2), cleaner.getCurrNode());
+    assertNotNull(cleaner.getCurrentMap()[8][2]);
   }
 
   @Test
@@ -924,8 +910,7 @@ class CleanerTest {
     assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
 
     cleaner.setCleanerStatus("reset");
-
-    cleaner.moveToLocation_UsingStack(0, 0);
+    cleaner.moveToLocation_UsingStack(0, 0, false);
     System.out.printf("move to north-west: from (2, 2) to (0, 0)");
     assertEquals(cleaner.getCleanerStatus(), "Blocked");
     assertEquals(floorPlan.returnNode(2, 2), cleaner.getCurrNode());
