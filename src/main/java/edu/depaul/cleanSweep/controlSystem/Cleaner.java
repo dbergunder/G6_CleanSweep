@@ -4,10 +4,9 @@ import edu.depaul.cleanSweep.diagnostics.PowerConsumptionLog;
 import edu.depaul.cleanSweep.floorPlan.CustomLinkedList;
 import edu.depaul.cleanSweep.floorPlan.FloorTile;
 import edu.depaul.cleanSweep.floorPlan.TileType;
-import org.javatuples.Pair;
-
 import java.io.IOException;
 import java.util.*;
+import org.javatuples.Pair;
 
 public class Cleaner {
   // variables related to battery consumption
@@ -329,26 +328,37 @@ public class Cleaner {
     }
   }
 
-  // for navigating away from obsticles
   public void moveToLocation_UsingStack(int targetX, int targetY) {
     List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
 
     while (!(currNode._x == targetX && currNode._y == targetY)) {
       wrongNodes.add(currNode);
       addValidNodes(wrongNodes);
-      if (validTilesStack.isEmpty()) {
-        currStatus = "Blocked";
-        return;
-      }
-      teleportToNode(validTilesStack.pop());
+      teleportToNode(validTilesStack.pop(), true);
     }
   }
 
-  private void teleportToNode(FloorTile node) {
+  // for navigating away from obsticles
+  public void moveToLocation_UsingStack(int targetX, int targetY, boolean shouldClean) {
+    List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
+
+    while (!(currNode._x == targetX && currNode._y == targetY)) {
+      wrongNodes.add(currNode);
+      addValidNodes(wrongNodes);
+      if (validTilesStack.isEmpty()) {
+        setCleanerStatus("Blocked");
+        break;
+      }
+
+      teleportToNode(validTilesStack.pop(), shouldClean);
+    }
+  }
+
+  private void teleportToNode(FloorTile node, boolean shouldClean) {
     this.prevNode = this.currNode;
     this.currNode = node;
-
-    currentMap[this.currNode._x][this.currNode._y] = copyFloorTile(this.currNode);
+    if (shouldClean) cleanSurface();
+    currentMap[this.currNode._x][this.currNode._y] = this.currNode;
     cleanerHistory.add(this.currNode);
 
     System.out.println("Moving to " + printCoordinate());
@@ -677,5 +687,15 @@ public class Cleaner {
   private FloorTile copyFloorTile(FloorTile tile) {
     FloorTile temp = new FloorTile(tile._y, tile._x, tile.getUnitsOfDirt(), tile.getSurfaceType());
     return temp;
+  }
+
+  public boolean moreCleaningToDo() {
+    for (int i = 0; i <= 5; i++) {
+      for (int j = 0; j <= 8; j++) {
+        FloorTile node = currentMap[j][i];
+        if (node != null && node.getAccessable() && node.getUnitsOfDirt() != 0) return false;
+      }
+    }
+    return true;
   }
 }
