@@ -17,7 +17,7 @@ public class Main{
 
 
         CustomLinkedList floorPlan = new CustomLinkedList();
-        floorPlan.convertXMLToCustomLinkedList(new File("files/SamplePlanWithAttributes.xml"));
+        floorPlan.createFloorFromXML(new File("files/SamplePlanWithAttributes.xml"));
 
         Cleaner cleaner = new Cleaner();
         cleaner.setSensorMap(floorPlan);

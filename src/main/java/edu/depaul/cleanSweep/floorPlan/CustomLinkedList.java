@@ -238,7 +238,7 @@ public class CustomLinkedList {
 //				System.out.println("Y : " + y); // used for testing
 //				System.out.println("X : " + x); // used for testing
 				FloorTile temptile = new FloorTile(y, x, dirt, accessible, chargingStation, surfaceType);
-				this.insert(temptile);
+				this.insertTile(temptile);
 //				System.out.println("Y : "  + eElement.getElementsByTagName("y").item(0).getTextContent()); // used for testing
 //				System.out.println("X : "  + eElement.getElementsByTagName("x").item(0).getTextContent()); // used for testing
 			}
@@ -302,6 +302,9 @@ public class CustomLinkedList {
 	{
 		//TileType type = TileType.fromInteger(floortype);
 		// Create a new node with given data
+		if(node.chargingStation) {
+			chargingStationList.add(node);
+		}
 		FloorTile new_node = new FloorTile(node._y, node._x, node.unitsOfDirt, node.surfaceType);
 		new_node.setChargeStation(node.chargingStation);
 		new_node.setAccessable(node.accessable);

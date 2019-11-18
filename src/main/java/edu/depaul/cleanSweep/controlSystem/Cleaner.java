@@ -320,14 +320,25 @@ public class Cleaner {
 		while(! (currNode._x == targetX && currNode._y == targetY ) ){
 			wrongNodes.add(currNode);
 			addValidNodes(wrongNodes);
-			teleportToNode(validTilesStack.pop());
+			teleportToNode(validTilesStack.pop(), true);
 		}
 	}
 
-	private void teleportToNode(FloorTile node){
+	public void moveToLocation_UsingStack(int targetX, int targetY, boolean shouldClean){
+		List<FloorTile> wrongNodes = new ArrayList<FloorTile>();
+
+		while(! (currNode._x == targetX && currNode._y == targetY ) ){
+			wrongNodes.add(currNode);
+			addValidNodes(wrongNodes);
+			teleportToNode(validTilesStack.pop(), shouldClean);
+		}
+	}
+
+	private void teleportToNode(FloorTile node, boolean shouldClean){
 		this.prevNode = this.currNode;
 		this.currNode = node;
-		cleanSurface();
+		if(shouldClean)
+			cleanSurface();
 		currentMap[this.currNode._x][this.currNode._y] = this.currNode;
 		cleanerHistory.add(this.currNode);
 
