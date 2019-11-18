@@ -28,34 +28,31 @@ public class Main{
 
         floorPlan.printSuccintMap();
 
-//        while(!cleaner.getCleaningComplete()){
-//
-//            int testX = (new Random()).nextInt(6);
-//            int testY = (new Random()).nextInt(9);
-//
-//            cleaner.moveToLocation_UsingStack(testX, testY);
-//        }
+        while(!cleaner.getCleaningComplete()){
+                List<FloorTile> map = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
 
-        List<FloorTile> map = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
+                for(FloorTile cell: map) {
+                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+                }
 
-        for(FloorTile cell: map) {
-            cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+                System.out.println(cleaner.getCurrentMapString());
+
+                List<FloorTile> reversePath = cleaner.reversePath(map);
+
+                for (FloorTile cell : reversePath) {
+                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+                }
+
+                System.out.println(cleaner.getCurrentMapString());
+
+                // returning null pointer exception here
+                List<FloorTile> secondMap = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
+
+                for(FloorTile cell: secondMap) {
+                        cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+                }
         }
 
-        System.out.println(cleaner.getCurrentMapString());
 
-        List<FloorTile> reversePath = cleaner.reversePath(map);
-
-        for (FloorTile cell : reversePath) {
-            cleaner.moveToLocation_UsingStack(cell._x, cell._y);
-        }
-
-        System.out.println(cleaner.getCurrentMapString());
-
-        List<FloorTile> secondMap = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
-
-        for(FloorTile cell: secondMap) {
-            cleaner.moveToLocation_UsingStack(cell._x, cell._y);
-        }
 	}
 }
