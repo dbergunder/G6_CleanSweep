@@ -638,10 +638,11 @@ public class Cleaner {
 
 	public String getCurrentMapString(){
 		String s = "";
-		for(int i = 0; i<=8; i++){
-			for(int j = 0; j<=5; j++){
-				if(currentMap[i][j] != null)
-					s += String.format("( %d , %d )", currentMap[i][j]._x ,currentMap[i][j]._y);
+		for(int i = 0; i<=5; i++){
+			for(int j = 0; j<=8; j++){
+				FloorTile node = currentMap[j][i];
+				if(node!= null)
+					s += String.format("( %d , %d )", node._x , node._y);
 				else
 					s += "(   ,   )";
 			}

@@ -38,26 +38,24 @@ public class Main{
 
         List<FloorTile> map = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
 
-        List<FloorTile> path = cleaner.reversePath(map);
-        
-        for(FloorTile cell: path) {
+        for(FloorTile cell: map) {
             cleaner.moveToLocation_UsingStack(cell._x, cell._y);
         }
 
         System.out.println(cleaner.getCurrentMapString());
 
-        System.out.println(cleaner.getNotCleanMap());
+        List<FloorTile> reversePath = cleaner.reversePath(map);
 
-        List<FloorTile> secondMap = cleaner.getTheMinPath(floorPlan.returnNode(2, 8));
-
-        for (FloorTile cell : secondMap) {
+        for (FloorTile cell : reversePath) {
             cleaner.moveToLocation_UsingStack(cell._x, cell._y);
         }
 
         System.out.println(cleaner.getCurrentMapString());
 
-        System.out.println(cleaner.getNotCleanMap());
+        List<FloorTile> secondMap = cleaner.getTheMinPath(floorPlan.returnNode(8, 5));
 
-
+        for(FloorTile cell: secondMap) {
+            cleaner.moveToLocation_UsingStack(cell._x, cell._y);
+        }
 	}
 }
